@@ -42,7 +42,7 @@
                                         <div class="mb-3">
                                             <label class="mb-1"><strong>Email</strong></label>
                                             <input type="email" class="form-control" name="email"
-                                                value="hello@example.com">
+                                                value="hello@example.com" autofocus>
                                         </div>
                                         <div class="mb-3">
                                             <label class="mb-1"><strong>Password</strong></label>
@@ -84,7 +84,8 @@
         Scripts
     ***********************************-->
     <!-- Required vendors -->
-    <script src="{{ asset('assets/vendor/global/global.min.js') }}"></script>
+    <script src="
+    vendor/global/global.min.js') }}"></script>
     <script src="{{ asset('assets/js/custom.min.js') }}"></script>
     <script src="{{ asset('assets/js/dlabnav-init.js') }}"></script>
 

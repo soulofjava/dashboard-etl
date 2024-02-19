@@ -136,6 +136,7 @@
                                         </g>
                                     </svg></a>
                             </div>
+
                             <div class="card-body contacts_body p-0 dlab-scroll  " id="dlab_W_Contacts_Body">
                                 <ul class="contacts">
                                     <li class="name-first-letter">A</li>
@@ -957,7 +958,11 @@
                                 </svg>
                                 <span class="ms-2">Inbox </span>
                             </a>
-                            <a href="login.html" class="dropdown-item ai-icon">
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                            <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                href="{{ route('logout') }}" class="dropdown-item ai-icon">
                                 <svg id="icon-logout" xmlns="http://www.w3.org/2000/svg" class="text-danger" width="18"
                                     height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round">
@@ -1203,8 +1208,8 @@
                                 <div class="row align-items-center">
                                     <div class="col-xl-6">
                                         <div class="card-bx bg-blue">
-                                            <img class="pattern-img" src="{{ asset('assets/images/pattern/pattern6.png') }}"
-                                                alt="">
+                                            <img class="pattern-img"
+                                                src="{{ asset('assets/images/pattern/pattern6.png') }}" alt="">
                                             <div class="card-info text-white">
                                                 <img src="{{ asset('assets/images/pattern/circle.png') }}" class="mb-4"
                                                     alt="">
@@ -2012,15 +2017,15 @@
     <script src="{{ asset('assets/vendor/global/global.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/chart.js/Chart.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/jquery-nice-select/js/jquery.nice-select.min.js') }}"></script>
-    
+
     <!-- Apex Chart -->
     <script src="{{ asset('assets/vendor/apexchart/apexchart.js') }}"></script>
     <script src="{{ asset('assets/vendor/nouislider/nouislider.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/wnumb/wNumb.js') }}"></script>
-    
+
     <!-- Dashboard 1 -->
     <script src="{{ asset('assets/js/dashboard/dashboard-1.js') }}"></script>
-    
+
     <script src="{{ asset('assets/js/custom.min.js') }}"></script>
     <script src="{{ asset('assets/js/dlabnav-init.js') }}"></script>
 
