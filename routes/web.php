@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Livewire\Front\Home;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
 
@@ -15,12 +16,8 @@ use Illuminate\Support\Facades\File;
 |
 */
 
-Route::get('template', function () {
-    return File::get(public_path() . '/template/index.html');
-});
-Route::get('/', function () {
-    return view('auth.login');
-});
+
+Route::get('/', Home::class)->name('home');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
