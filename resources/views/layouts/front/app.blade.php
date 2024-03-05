@@ -6,7 +6,8 @@
     <title>Dashboard ETL</title>
     @include('layouts.front.style')
     @stack('css')
-    <livewire:styles />
+    @vite(['resources/js/app.js'])
+    @livewireStyles
 </head>
 
 <body>
@@ -15,7 +16,7 @@
         <!-- /header -->
         {{ $slot ?? '' }}
         <!-- /section -->
-        <livewire:front.list-kelurahan>
+
     </div>
     <!-- /.content-wrapper -->
     @include('layouts.front.footer')
@@ -25,7 +26,10 @@
             <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
         </svg>
     </div>
-    @include('layouts/front/js')
+    <livewire:scripts />
+    @livewireChartsScripts
+    @stack('js')
+    @include('layouts.front.js')
 </body>
 
 </html>
