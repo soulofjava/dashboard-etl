@@ -8,7 +8,7 @@
                 <div class="shape rounded bg-soft-primary rellax d-md-block" data-rellax-speed="0"
                     style="bottom: -1.8rem; right: -0.8rem; width: 85%; height: 90%;"></div>
                 <figure class="rounded"><img
-                        src="{{ asset('costum/img') }}./foto_8c856619-9900-423b-bb2d-dd7a65ab7a24.jpg"
+                        src="{{ asset('costum/img/foto_8c856619-9900-423b-bb2d-dd7a65ab7a24.jpg') }}"
                         srcset="./assets/img/photos/about7@2x.jpg 2x" alt="" /></figure>
             </div>
             <!--/column -->
@@ -22,14 +22,14 @@
             <!--/column -->
         </div>
     </div>
-    <section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-300"
-        data-image-src="{{ asset('sandbox/') }}./assets/img/photos/bg23.png">
-        <div class="container pb-15 pb-md-1 mt-10">
+    <section class="wrapper image-wrapper bg-image bg-overlay bg-overlay-300 text-white"
+        data-image-src="{{ asset('sandbox/assets/img/photos/bg23.png') }}">
+        <div class="container pb-15 pb-md-17 mt-10">
             <div class="row gx-md-5 gy-5 text-center">
                 <div class="col-md-6 col-xl-3">
                     <div class="card shadow-lg">
                         <div class="card-body">
-                            <img src="{{ asset('costum/img') }}./penduduk.jpg"
+                            <img src="{{ asset('costum/img/penduduk.jpg') }}"
                                 class="rounded svg-inject icon-svg icon-svg-sm solid-mono text-fuchsia mb-3"
                                 alt="" />
                             <h4>Penduduk</h4>
@@ -43,7 +43,7 @@
                 <div class="col-md-6 col-xl-3">
                     <div class="card shadow-lg">
                         <div class="card-body">
-                            <img src="{{ asset('costum/img') }}./keluarga.jpg"
+                            <img src="{{ asset('costum/img/keluarga.jpg') }}"
                                 class="svg-inject icon-svg icon-svg-sm solid-mono text-violet mb-3" alt="" />
                             <h4>Kecamatan</h4>
                             <p class="mb-2">{{ $totalKecamatan }}</p>
@@ -56,7 +56,7 @@
                 <div class="col-md-6 col-xl-3">
                     <div class="card shadow-lg">
                         <div class="card-body">
-                            <img src="{{ asset('costum/img') }}./rtm.jpg"
+                            <img src="{{ asset('costum/img/rtm.jpg') }}"
                                 class="svg-inject icon-svg icon-svg-sm solid-mono text-violet mb-3" alt="" />
                             <h4>Desa / Kelurahan</h4>
                             <p class="mb-2">{{ $totalDesa }}</p>
@@ -69,7 +69,7 @@
                 <div class="col-md-6 col-xl-3">
                     <div class="card shadow-lg">
                         <div class="card-body">
-                            <img src="{{ asset('costum/img') }}./bantuan.jpg"
+                            <img src="{{ asset('costum/img/bantuan.jpg') }}"
                                 class="svg-inject icon-svg icon-svg-sm solid-mono text-violet mb-3" alt="" />
                             <h4>Bantuan</h4>
                             <p class="mb-2">{{ $totalBantuan }}</p>

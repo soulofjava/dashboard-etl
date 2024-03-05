@@ -20,7 +20,7 @@
         <div class="container flex-lg-row flex-nowrap align-items-center">
             <div class="navbar-brand w-100">
                 <a href="./index.html">
-                    <img src="{{ asset('costum/') }}./etl.png" srcset="{{ asset('costum/') }}./etl.png"
+                    <img src="{{ asset('costum/etl.png') }}" srcset="{{ asset('costum/etl.png') }}"
                         alt="" />
                 </a>
             </div>
@@ -185,7 +185,7 @@
                                         <li class="col"><a class="dropdown-item" href="./docs/blocks/about.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block1.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block1.svg') }}"
                                                         alt=""></div>
                                                 <span>About</span>
                                             </a>
@@ -193,7 +193,7 @@
                                         <li class="col"><a class="dropdown-item" href="./docs/blocks/blog.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block2.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block2.svg') }}"
                                                         alt=""></div>
                                                 <span>Blog</span>
                                             </a>
@@ -202,7 +202,7 @@
                                                 href="./docs/blocks/call-to-action.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block3.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block3.svg') }}"
                                                         alt=""></div>
                                                 <span>Call to Action</span>
                                             </a>
@@ -211,7 +211,7 @@
                                                 href="./docs/blocks/clients.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block4.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block4.svg') }}"
                                                         alt=""></div>
                                                 <span>Clients</span>
                                             </a>
@@ -220,7 +220,7 @@
                                                 href="./docs/blocks/contact.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block5.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block5.svg') }}"
                                                         alt=""></div>
                                                 <span>Contact</span>
                                             </a>
@@ -228,7 +228,7 @@
                                         <li class="col"><a class="dropdown-item" href="./docs/blocks/facts.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block6.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block6.svg') }}"
                                                         alt=""></div>
                                                 <span>Facts</span>
                                             </a>
@@ -236,7 +236,7 @@
                                         <li class="col"><a class="dropdown-item" href="./docs/blocks/faq.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block7.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block7.svg') }}"
                                                         alt=""></div>
                                                 <span>FAQ</span>
                                             </a>
@@ -245,7 +245,7 @@
                                                 href="./docs/blocks/features.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block8.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block8.svg') }}"
                                                         alt=""></div>
                                                 <span>Features</span>
                                             </a>
@@ -253,7 +253,7 @@
                                         <li class="col"><a class="dropdown-item" href="./docs/blocks/footer.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block9.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block9.svg') }}"
                                                         alt=""></div>
                                                 <span>Footer</span>
                                             </a>
@@ -261,7 +261,7 @@
                                         <li class="col"><a class="dropdown-item" href="./docs/blocks/hero.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block10.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block10.svg') }}"
                                                         alt=""></div>
                                                 <span>Hero</span>
                                             </a>
@@ -269,7 +269,7 @@
                                         <li class="col"><a class="dropdown-item" href="./docs/blocks/misc.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block17.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block17.svg') }}"
                                                         alt=""></div>
                                                 <span>Misc</span>
                                             </a>
@@ -277,7 +277,7 @@
                                         <li class="col"><a class="dropdown-item" href="./docs/blocks/navbar.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block11.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block11.svg') }}"
                                                         alt=""></div>
                                                 <span>Navbar</span>
                                             </a>
@@ -286,7 +286,7 @@
                                                 href="./docs/blocks/portfolio.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block12.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block12.svg') }}"
                                                         alt=""></div>
                                                 <span>Portfolio</span>
                                             </a>
@@ -295,7 +295,7 @@
                                                 href="./docs/blocks/pricing.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block13.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block13.svg') }}"
                                                         alt=""></div>
                                                 <span>Pricing</span>
                                             </a>
@@ -304,7 +304,7 @@
                                                 href="./docs/blocks/process.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block14.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block14.svg') }}"
                                                         alt=""></div>
                                                 <span>Process</span>
                                             </a>
@@ -312,7 +312,7 @@
                                         <li class="col"><a class="dropdown-item" href="./docs/blocks/team.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block15.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block15.svg') }}"
                                                         alt=""></div>
                                                 <span>Team</span>
                                             </a>
@@ -321,7 +321,7 @@
                                                 href="./docs/blocks/testimonials.html">
                                                 <div class="rounded img-svg d-none d-lg-block p-4 mb-lg-2"><img
                                                         class="rounded-0"
-                                                        src="{{ asset('sandbox/') }}./assets/img/demos/block16.svg"
+                                                        src="{{ asset('sandbox/assets/img/demos/block16.svg') }}"
                                                         alt=""></div>
                                                 <span>Testimonials</span>
                                             </a>

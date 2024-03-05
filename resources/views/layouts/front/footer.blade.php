@@ -3,8 +3,8 @@
         <div class="row gy-6 gy-lg-0">
             <div class="col-md-4 col-lg-3">
                 <div class="widget">
-                    <img class="mb-4" src="{{ asset('sandbox/') }}./assets/img/logo-dark.png"
-                        srcset="{{ asset('sandbox/') }}./assets/img/logo-dark@2x.png 2x" alt="" />
+                    <img class="mb-4" src="{{ asset('sandbox/assets/img/logo-dark.png') }}"
+                        srcset="{{ asset('sandbox/assets/img/logo-dark@2x.png 2x') }}" alt="" />
                     <p class="mb-4">© 2023 Sandbox. <br class="d-none d-lg-block" />All rights reserved.</p>
                     <nav class="nav social ">
                         <a href="#"><i class="uil uil-twitter"></i></a>
@@ -55,12 +55,11 @@
                                 class="validate " target="_blank" novalidate>
                                 <div id="mc_embed_signup_scroll2">
                                     <div class="mc-field-group input-group form-floating">
-                                        <input type="email" value="" name="EMAIL"
-                                            class="required email form-control" placeholder="Email Address"
-                                            id="mce-EMAIL2">
+                                        <input type="email" value="" name="EMAIL" class="required email form-control"
+                                            placeholder="Email Address" id="mce-EMAIL2">
                                         <label for="mce-EMAIL2">Email Address</label>
-                                        <input type="submit" value="Join" name="subscribe"
-                                            id="mc-embedded-subscribe2" class="btn btn-primary ">
+                                        <input type="submit" value="Join" name="subscribe" id="mc-embedded-subscribe2"
+                                            class="btn btn-primary ">
                                     </div>
                                     <div id="mce-responses2" class="clear">
                                         <div class="response" id="mce-error-response2" style="display:none">
