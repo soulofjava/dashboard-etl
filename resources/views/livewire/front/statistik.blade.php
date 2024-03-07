@@ -39,14 +39,16 @@
                         </div>
                         <!-- /column -->
                     </div>
-                    <!-- /.row -->
+                    <!-- /.row --><button type="submit" class="btn btn-primary rounded-pill btn-send mb-3"
+                    wire:click="test">Rentang Umur
+                </button>
                 </div>
 
                 @if ($show)
                     <div class="col-lg-9 order-lg-1">
                         <div class="row align-items-center mb-10 position-relative zindex-1">
                             <div class="col-md-7 col-xl-8 pe-xl-20">
-                                <h2 class="display-6 mb-1">Data Statistik</h2>
+                                <h2 class="display-6 mb-1">Data Statistik {{ $jenis ?? '' }}</h2>
                             </div>
                             <!--/column -->
 
@@ -97,6 +99,28 @@
                                 </tbody>
                             </table>
                         @elseif($jenis == 'pendidikan')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            @elseif($jenis == 'rentangUmur')
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -218,8 +242,7 @@
                                 <li class="mb-1">
                                     <h4> <a href="#" class="align-items-center rounded link-body"
                                             data-bs-toggle="collapse" data-bs-target="#clothing-collapse"
-                                            aria-expanded="true">Statistik Penduduk <span
-                                                class="fs-sm text-muted ms-1">(22)</span>
+                                            aria-expanded="true">Statistik Penduduk
                                         </a></h4>
                                     <div class="collapse show mt-1" id="clothing-collapse" style="">
                                         <ul class="btn-toggle-nav list-unstyled ps-2">
@@ -282,8 +305,7 @@
                                 <li class="mb-1">
                                     <h4> <a href="#" class="align-items-center rounded link-body"
                                             data-bs-toggle="collapse" data-bs-target="#keluarga-collapse"
-                                            aria-expanded="false">Statistik Keluarga<span
-                                                class="fs-sm text-muted ms-1">(1)</span>
+                                            aria-expanded="false">Statistik Keluarga
                                         </a></h4>
                                     <div class="collapse mt-1" id="keluarga-collapse" style="">
                                         <ul class="btn-toggle-nav list-unstyled ps-2">
@@ -295,8 +317,7 @@
                                 <li class="mb-1">
                                     <h4> <a href="#" class="align-items-center rounded collapsed link-body"
                                             data-bs-toggle="collapse" data-bs-target="#bantuan-collapse"
-                                            aria-expanded="false">Statistik Bantuan<span
-                                                class="fs-sm text-muted ms-1">(2)</span>
+                                            aria-expanded="false">Statistik Bantuan
                                         </a></h4>
                                     <div class="collapse mt-1" id="bantuan-collapse" style="">
                                         <ul class="btn-toggle-nav list-unstyled ps-2">
@@ -311,8 +332,7 @@
                                 <li class="mb-1">
                                     <h4> <a href="#" class="align-items-center rounded collapsed link-body"
                                             data-bs-toggle="collapse" data-bs-target="#rtm-collapse"
-                                            aria-expanded="false"> Statistik RTM <span
-                                                class="fs-sm text-muted ms-1">(1)</span>
+                                            aria-expanded="false"> Statistik RTM 
                                         </a> </h4>
                                     <div class="collapse mt-1" id="rtm-collapse" style="">
                                         <ul class="btn-toggle-nav list-unstyled ps-2">
