@@ -36,9 +36,9 @@ class Statistik extends Component
     {
         $this->jenis = "rentangUmur";
     }
-    public function pekerjaan()
+    public function kategoriUmur()
     {
-        $this->jenis = "pekerjaan";
+        $this->jenis = "kategoriUmur";
     }
     public function pendidikanKk()
     {
@@ -48,6 +48,10 @@ class Statistik extends Component
     public function pendidikanDitempuh()
     {
         $this->jenis = "pendidikan";
+    }
+    public function pekerjaan()
+    {
+        $this->jenis = "pekerjaan";
     }
     public function statusPerkawinan()
     {
@@ -60,6 +64,18 @@ class Statistik extends Component
     public function jenisKelamin()
     {
         $this->jenis = "jenisKelamin";
+    }
+    public function hubunganKk()
+    {
+        $this->jenis = "hubunganKk";
+    }
+    public function wargaNegara()
+    {
+        $this->jenis = "wargaNegara";
+    }
+    public function statusPenduduk()
+    {
+        $this->jenis = "statusPenduduk";
     }
     public function tampilkan()
     {
@@ -76,20 +92,19 @@ class Statistik extends Component
             $this->configId = $cari->id;
         }
     }
-    public function test(){
-       
-$result = DB::table('tweb_penduduk')
-->join('tweb_penduduk_umur', function ($join) {
-    $join->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '>=', 'tweb_penduduk_umur.dari')
-        ->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '<=', 'tweb_penduduk_umur.sampai');
-})
-->whereBetween('tweb_penduduk_umur.id', [6, 37])
-->groupBy('tweb_penduduk_umur.nama')
-->orderBy('tweb_penduduk_umur.nama', 'asc')
-->select('tweb_penduduk_umur.nama', DB::raw('COUNT(*) as Total'))
-->get();
+    public function test(){       
+        $result = DB::table('tweb_penduduk')
+        ->join('tweb_penduduk_umur', function ($join) {
+            $join->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '>=', 'tweb_penduduk_umur.dari')
+                ->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '<=', 'tweb_penduduk_umur.sampai');
+        })
+        ->whereBetween('tweb_penduduk_umur.id', [6, 37])
+        ->groupBy('tweb_penduduk_umur.nama')
+        ->orderBy('tweb_penduduk_umur.nama', 'asc')
+        ->select('tweb_penduduk_umur.nama', DB::raw('COUNT(*) as Total'))
+        ->get();
 
-dd($result);
+        dd($result);
     }
     
     public function render()
@@ -103,7 +118,7 @@ dd($result);
             ->whereBetween('tweb_penduduk_umur.id', [6, 37])
             ->groupBy('tweb_penduduk_umur.id', 'tweb_penduduk_umur.nama')
             ->orderBy('tweb_penduduk_umur.nama', 'asc')
-            ->select('tweb_penduduk_umur.id as id', 'tweb_penduduk_umur.nama as nama', DB::raw('COUNT(*) as total'))
+            ->select('tweb_penduduk_umur.id as id', DB::raw('COALESCE(tweb_penduduk_umur.nama, "Belum Terdata") AS nama'), DB::raw('COUNT(*) as total'))
             ->get();
         
             $this->data = $result;
@@ -135,11 +150,56 @@ dd($result);
                     (new PieChartModel())
                         ->setTitle('Rentang Umur')
                         ->setAnimated($this->firstRun)
+                        ->withDataLabels()
+                        ->withOnSliceClickEvent('onSliceClick')
+                );
+        }
+        if ($this->jenis == "kategoriUmur") {
+            $result = TwebPenduduk::join('tweb_penduduk_umur', function ($join) {
+                $join->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '>=', 'tweb_penduduk_umur.dari')
+                    ->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '<=', 'tweb_penduduk_umur.sampai');
+            })
+            ->where('tweb_penduduk.config_id', '=', $this->configId)
+            ->whereBetween('tweb_penduduk_umur.id', [1, 4])
+            ->groupBy('tweb_penduduk_umur.id', 'tweb_penduduk_umur.nama')
+            ->orderBy('tweb_penduduk_umur.nama', 'asc')
+            ->select('tweb_penduduk_umur.id as id', DB::raw('COALESCE(tweb_penduduk_umur.nama, "Belum Terdata") AS nama'), DB::raw('COUNT(*) as total'))
+            ->get();
+        
+            $this->data = $result;
+            $columnChartModel = $result
+                ->reduce(
+                    function (ColumnChartModel $columnChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+                        return $columnChartModel->addColumn($nama, $value, $warna[$id]);
+                    },
+                    (new ColumnChartModel())
+                        ->setTitle('Kategori Umur')
+                        ->setAnimated($this->firstRun)
+                        ->withOnColumnClickEventName('onColumnClick')
+                );
+
+            $pieChartModel = $result
+                ->reduce(
+                    function (PieChartModel $pieChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+
+                        return $pieChartModel->addSlice($nama, $value, $warna[$id]);
+                    },
+                    (new PieChartModel())
+                        ->setTitle('Kategori Umur')
+                        ->setAnimated($this->firstRun)
+                        ->withDataLabels()
                         ->withOnSliceClickEvent('onSliceClick')
                 );
                 
         }
-        
         if ($this->jenis == "pendidikan_kk") {
             $result = DB::table('tweb_penduduk')
                 ->leftjoin('tweb_penduduk_pendidikan_kk', 'tweb_penduduk.pendidikan_kk_id', '=', 'tweb_penduduk_pendidikan_kk.id')
@@ -180,6 +240,7 @@ dd($result);
                     (new PieChartModel())
                         ->setTitle('Pendidikan Dalam Keluarga')
                         ->setAnimated($this->firstRun)
+                        ->withDataLabels()
                         ->withOnSliceClickEvent('onSliceClick')
                 );
         } elseif ($this->jenis == "pendidikan") {
@@ -223,6 +284,7 @@ dd($result);
                     (new PieChartModel())
                         ->setTitle('Pendidikan Sedang Ditempuh')
                         ->setAnimated($this->firstRun)
+                        ->withDataLabels()
                         ->withOnSliceClickEvent('onSliceClick')
                 );
         } elseif ($this->jenis == "statusPerkawinan") {
@@ -266,6 +328,7 @@ dd($result);
                     (new PieChartModel())
                         ->setTitle('Status Perkawinan')
                         ->setAnimated($this->firstRun)
+                        ->withDataLabels()
                         ->withOnSliceClickEvent('onSliceClick')
                 );
         } elseif ($this->jenis == "pekerjaan") {
@@ -308,6 +371,7 @@ dd($result);
                     (new PieChartModel())
                         ->setTitle('Pekerjaan')
                         ->setAnimated($this->firstRun)
+                        ->withDataLabels()
                         ->withOnSliceClickEvent('onSliceClick')
                 );
         } elseif ($this->jenis == "agama") {
@@ -350,6 +414,7 @@ dd($result);
                     (new PieChartModel())
                         ->setTitle('Agama')
                         ->setAnimated($this->firstRun)
+                        ->withDataLabels()
                         ->withOnSliceClickEvent('onSliceClick')
                 );
         } elseif ($this->jenis == "jenisKelamin") {
@@ -392,10 +457,142 @@ dd($result);
                     (new PieChartModel())
                         ->setTitle('Jenis Kelamin')
                         ->setAnimated($this->firstRun)
+                        ->withDataLabels()
                         ->withOnSliceClickEvent('onSliceClick')
                 );
         }
+        elseif ($this->jenis == "hubunganKk") {
+            $result = DB::table('tweb_penduduk')
+                ->leftJoin('tweb_penduduk_hubungan', 'tweb_penduduk.kk_level', '=', 'tweb_penduduk_hubungan.id')
+                ->select(
+                    'tweb_penduduk_hubungan.id',
+                    DB::raw('COALESCE(tweb_penduduk_hubungan.nama, "Belum Terdata") AS nama'),
+                    DB::raw('COUNT(tweb_penduduk.id) AS total')
+                )
+                ->groupBy('tweb_penduduk_hubungan.id', 'nama')
+                ->orderBy('tweb_penduduk_hubungan.id', 'asc')->get();
 
+            $this->data = $result;
+            $columnChartModel = $result
+                ->reduce(
+                    function (ColumnChartModel $columnChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+                        return $columnChartModel->addColumn($nama, $value, $warna[$id]);
+                    },
+                    (new ColumnChartModel())
+                        ->setTitle('Hubungan Dalam KK')
+                        ->setAnimated($this->firstRun)
+                        ->withOnColumnClickEventName('onColumnClick')
+                );
+
+            $pieChartModel = $result
+                ->reduce(
+                    function (PieChartModel $pieChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+
+                        return $pieChartModel->addSlice($nama, $value, $warna[$id]);
+                    },
+                    (new PieChartModel())
+                        ->setTitle('Hubungan Dalam KK')
+                        ->setAnimated($this->firstRun)
+                        ->withDataLabels()
+                        ->withOnSliceClickEvent('onSliceClick')
+                );
+        }
+        elseif ($this->jenis == "wargaNegara") {
+            $result = DB::table('tweb_penduduk')
+                ->leftJoin('tweb_penduduk_warganegara', 'tweb_penduduk.warganegara_id', '=', 'tweb_penduduk_warganegara.id')
+                ->select(
+                    'tweb_penduduk_warganegara.id',
+                    DB::raw('COALESCE(tweb_penduduk_warganegara.nama, "Belum Terdata") AS nama'),
+                    DB::raw('COUNT(tweb_penduduk.id) AS total')
+                )
+                ->groupBy('tweb_penduduk_warganegara.id', 'nama')
+                ->orderBy('tweb_penduduk_warganegara.id', 'asc')->get();
+
+            $this->data = $result;
+            $columnChartModel = $result
+                ->reduce(
+                    function (ColumnChartModel $columnChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+                        return $columnChartModel->addColumn($nama, $value, $warna[$id]);
+                    },
+                    (new ColumnChartModel())
+                        ->setTitle('Warga Negara')
+                        ->setAnimated($this->firstRun)
+                        ->withOnColumnClickEventName('onColumnClick')
+                );
+
+            $pieChartModel = $result
+                ->reduce(
+                    function (PieChartModel $pieChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+
+                        return $pieChartModel->addSlice($nama, $value, $warna[$id]);
+                    },
+                    (new PieChartModel())
+                        ->setTitle('Warga Negara')
+                        ->setAnimated($this->firstRun)
+                        ->withDataLabels()
+                        ->withOnSliceClickEvent('onSliceClick')
+                );
+        }
+        elseif ($this->jenis == "statusPenduduk") {
+            $result = DB::table('tweb_penduduk')
+                ->leftJoin('tweb_penduduk_status', 'tweb_penduduk.status', '=', 'tweb_penduduk_status.id')
+                ->select(
+                    'tweb_penduduk_status.id',
+                    DB::raw('COALESCE(tweb_penduduk_status.nama, "Belum Terdata") AS nama'),
+                    DB::raw('COUNT(tweb_penduduk.id) AS total')
+                )
+                ->groupBy('tweb_penduduk_status.id', 'nama')
+                ->orderBy('tweb_penduduk_status.id', 'asc')->get();
+
+            $this->data = $result;
+            $columnChartModel = $result
+                ->reduce(
+                    function (ColumnChartModel $columnChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+                        return $columnChartModel->addColumn($nama, $value, $warna[$id]);
+                    },
+                    (new ColumnChartModel())
+                        ->setTitle('Warga Negara')
+                        ->setAnimated($this->firstRun)
+                        ->withOnColumnClickEventName('onColumnClick')
+                );
+
+            $pieChartModel = $result
+                ->reduce(
+                    function (PieChartModel $pieChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+
+                        return $pieChartModel->addSlice($nama, $value, $warna[$id]);
+                    },
+                    (new PieChartModel())
+                        ->setTitle('Warga Negara')
+                        ->setAnimated($this->firstRun)
+                        ->withDataLabels()
+                        ->withOnSliceClickEvent('onSliceClick')
+                );
+        }
         return view('livewire.front.statistik')->with([
             'columnChartModel' => $columnChartModel ?? '',
             'pieChartModel' => $pieChartModel ?? ''
