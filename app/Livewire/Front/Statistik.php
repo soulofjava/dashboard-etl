@@ -77,6 +77,34 @@ class Statistik extends Component
     {
         $this->jenis = "statusPenduduk";
     }
+    public function golonganDarah()
+    {
+        $this->jenis = "golonganDarah";
+    }
+    public function penyandangCacat()
+    {
+        $this->jenis = "penyandangCacat";
+    }
+    public function penyakitMenahun()
+    {
+        $this->jenis = "penyakitMenahun";
+    }
+    public function akseptorKB()
+    {
+        $this->jenis = "akseptorKB";
+    }
+    public function kepemilikanKtp()
+    {
+        $this->jenis = "kepemilikanKtp";
+    }
+    public function asuransiKesehatan()
+    {
+        $this->jenis = "asuransiKesehatan";
+    }
+    public function sukuEtnis()
+    {
+        $this->jenis = "sukuEtnis";
+    }
     public function tampilkan()
     {
         $rules = [
@@ -88,25 +116,11 @@ class Statistik extends Component
         $cari = Config::find($this->selectDesa);
         if (isset($cari)) {
             $this->show = true;
-            $this->jenis = "pendidikan_kk";
+            $this->jenis = "rentangUmur";
             $this->configId = $cari->id;
         }
     }
-    public function test(){       
-        $result = DB::table('tweb_penduduk')
-        ->join('tweb_penduduk_umur', function ($join) {
-            $join->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '>=', 'tweb_penduduk_umur.dari')
-                ->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '<=', 'tweb_penduduk_umur.sampai');
-        })
-        ->whereBetween('tweb_penduduk_umur.id', [6, 37])
-        ->groupBy('tweb_penduduk_umur.nama')
-        ->orderBy('tweb_penduduk_umur.nama', 'asc')
-        ->select('tweb_penduduk_umur.nama', DB::raw('COUNT(*) as Total'))
-        ->get();
 
-        dd($result);
-    }
-    
     public function render()
     {
         if ($this->jenis == "rentangUmur") {
@@ -114,13 +128,13 @@ class Statistik extends Component
                 $join->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '>=', 'tweb_penduduk_umur.dari')
                     ->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '<=', 'tweb_penduduk_umur.sampai');
             })
-            ->where('tweb_penduduk.config_id', '=', $this->configId)
-            ->whereBetween('tweb_penduduk_umur.id', [6, 37])
-            ->groupBy('tweb_penduduk_umur.id', 'tweb_penduduk_umur.nama')
-            ->orderBy('tweb_penduduk_umur.nama', 'asc')
-            ->select('tweb_penduduk_umur.id as id', DB::raw('COALESCE(tweb_penduduk_umur.nama, "Belum Terdata") AS nama'), DB::raw('COUNT(*) as total'))
-            ->get();
-        
+                ->where('tweb_penduduk.config_id', '=', $this->configId)
+                ->whereBetween('tweb_penduduk_umur.id', [6, 37])
+                ->groupBy('tweb_penduduk_umur.id', 'tweb_penduduk_umur.nama')
+                ->orderBy('tweb_penduduk_umur.nama', 'asc')
+                ->select('tweb_penduduk_umur.id as id', DB::raw('COALESCE(tweb_penduduk_umur.nama, "Belum Terdata") AS nama'), DB::raw('COUNT(*) as total'))
+                ->get();
+
             $this->data = $result;
             $columnChartModel = $result
                 ->reduce(
@@ -159,13 +173,13 @@ class Statistik extends Component
                 $join->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '>=', 'tweb_penduduk_umur.dari')
                     ->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '<=', 'tweb_penduduk_umur.sampai');
             })
-            ->where('tweb_penduduk.config_id', '=', $this->configId)
-            ->whereBetween('tweb_penduduk_umur.id', [1, 4])
-            ->groupBy('tweb_penduduk_umur.id', 'tweb_penduduk_umur.nama')
-            ->orderBy('tweb_penduduk_umur.nama', 'asc')
-            ->select('tweb_penduduk_umur.id as id', DB::raw('COALESCE(tweb_penduduk_umur.nama, "Belum Terdata") AS nama'), DB::raw('COUNT(*) as total'))
-            ->get();
-        
+                ->where('tweb_penduduk.config_id', '=', $this->configId)
+                ->whereBetween('tweb_penduduk_umur.id', [1, 4])
+                ->groupBy('tweb_penduduk_umur.id', 'tweb_penduduk_umur.nama')
+                ->orderBy('tweb_penduduk_umur.nama', 'asc')
+                ->select('tweb_penduduk_umur.id as id', DB::raw('COALESCE(tweb_penduduk_umur.nama, "Belum Terdata") AS nama'), DB::raw('COUNT(*) as total'))
+                ->get();
+
             $this->data = $result;
             $columnChartModel = $result
                 ->reduce(
@@ -198,19 +212,19 @@ class Statistik extends Component
                         ->withDataLabels()
                         ->withOnSliceClickEvent('onSliceClick')
                 );
-                
         }
         if ($this->jenis == "pendidikan_kk") {
             $result = DB::table('tweb_penduduk')
                 ->leftjoin('tweb_penduduk_pendidikan_kk', 'tweb_penduduk.pendidikan_kk_id', '=', 'tweb_penduduk_pendidikan_kk.id')
-                ->select('tweb_penduduk_pendidikan_kk.id', 
-                DB::raw('COALESCE(tweb_penduduk_pendidikan_kk.nama, "Belum Terdata") AS nama'),
-                DB::raw('COUNT(tweb_penduduk_pendidikan_kk.id) AS total')
+                ->select(
+                    'tweb_penduduk_pendidikan_kk.id',
+                    DB::raw('COALESCE(tweb_penduduk_pendidikan_kk.nama, "Belum Terdata") AS nama'),
+                    DB::raw('COUNT(tweb_penduduk_pendidikan_kk.id) AS total')
                 )
                 ->where('tweb_penduduk.config_id', '=', $this->configId)
                 ->groupBy('tweb_penduduk_pendidikan_kk.id')
                 ->orderBy('tweb_penduduk_pendidikan_kk.id', 'asc')->get();
-                
+
             $this->data = $result;
             $columnChartModel = $result
                 ->reduce(
@@ -460,8 +474,7 @@ class Statistik extends Component
                         ->withDataLabels()
                         ->withOnSliceClickEvent('onSliceClick')
                 );
-        }
-        elseif ($this->jenis == "hubunganKk") {
+        } elseif ($this->jenis == "hubunganKk") {
             $result = DB::table('tweb_penduduk')
                 ->leftJoin('tweb_penduduk_hubungan', 'tweb_penduduk.kk_level', '=', 'tweb_penduduk_hubungan.id')
                 ->select(
@@ -504,8 +517,7 @@ class Statistik extends Component
                         ->withDataLabels()
                         ->withOnSliceClickEvent('onSliceClick')
                 );
-        }
-        elseif ($this->jenis == "wargaNegara") {
+        } elseif ($this->jenis == "wargaNegara") {
             $result = DB::table('tweb_penduduk')
                 ->leftJoin('tweb_penduduk_warganegara', 'tweb_penduduk.warganegara_id', '=', 'tweb_penduduk_warganegara.id')
                 ->select(
@@ -548,8 +560,7 @@ class Statistik extends Component
                         ->withDataLabels()
                         ->withOnSliceClickEvent('onSliceClick')
                 );
-        }
-        elseif ($this->jenis == "statusPenduduk") {
+        } elseif ($this->jenis == "statusPenduduk") {
             $result = DB::table('tweb_penduduk')
                 ->leftJoin('tweb_penduduk_status', 'tweb_penduduk.status', '=', 'tweb_penduduk_status.id')
                 ->select(
@@ -588,6 +599,307 @@ class Statistik extends Component
                     },
                     (new PieChartModel())
                         ->setTitle('Warga Negara')
+                        ->setAnimated($this->firstRun)
+                        ->withDataLabels()
+                        ->withOnSliceClickEvent('onSliceClick')
+                );
+        } elseif ($this->jenis == "golonganDarah") {
+            $result = DB::table('tweb_penduduk')
+                ->leftJoin('tweb_golongan_darah', 'tweb_penduduk.golongan_darah_id', '=', 'tweb_golongan_darah.id')
+                ->select(
+                    'tweb_golongan_darah.id',
+                    DB::raw('COALESCE(tweb_golongan_darah.nama, "Belum Terdata") AS nama'),
+                    DB::raw('COUNT(tweb_penduduk.id) AS total')
+                )
+                ->groupBy('tweb_golongan_darah.id', 'nama')
+                ->orderBy('tweb_golongan_darah.id', 'asc')->get();
+
+            $this->data = $result;
+            $columnChartModel = $result
+                ->reduce(
+                    function (ColumnChartModel $columnChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+                        return $columnChartModel->addColumn($nama, $value, $warna[$id]);
+                    },
+                    (new ColumnChartModel())
+                        ->setTitle('Golongan Darah')
+                        ->setAnimated($this->firstRun)
+                        ->withOnColumnClickEventName('onColumnClick')
+                );
+
+            $pieChartModel = $result
+                ->reduce(
+                    function (PieChartModel $pieChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+
+                        return $pieChartModel->addSlice($nama, $value, $warna[$id]);
+                    },
+                    (new PieChartModel())
+                        ->setTitle('Golongan Darah')
+                        ->setAnimated($this->firstRun)
+                        ->withDataLabels()
+                        ->withOnSliceClickEvent('onSliceClick')
+                );
+        } elseif ($this->jenis == "penyandangCacat") {
+            $result = DB::table('tweb_penduduk')
+                ->leftJoin('tweb_cacat', 'tweb_penduduk.cacat_id', '=', 'tweb_cacat.id')
+                ->select(
+                    'tweb_cacat.id',
+                    DB::raw('COALESCE(tweb_cacat.nama, "Belum Terdata") AS nama'),
+                    DB::raw('COUNT(tweb_penduduk.id) AS total')
+                )
+                ->groupBy('tweb_cacat.id', 'nama')
+                ->orderBy('tweb_cacat.id', 'asc')->get();
+
+            $this->data = $result;
+            $columnChartModel = $result
+                ->reduce(
+                    function (ColumnChartModel $columnChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+                        return $columnChartModel->addColumn($nama, $value, $warna[$id]);
+                    },
+                    (new ColumnChartModel())
+                        ->setTitle('Penyandang Cacat')
+                        ->setAnimated($this->firstRun)
+                        ->withOnColumnClickEventName('onColumnClick')
+                );
+
+            $pieChartModel = $result
+                ->reduce(
+                    function (PieChartModel $pieChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+
+                        return $pieChartModel->addSlice($nama, $value, $warna[$id]);
+                    },
+                    (new PieChartModel())
+                        ->setTitle('Penyandang Cacat')
+                        ->setAnimated($this->firstRun)
+                        ->withDataLabels()
+                        ->withOnSliceClickEvent('onSliceClick')
+                );
+        } elseif ($this->jenis == "penyakitMenahun") {
+            $result = DB::table('tweb_penduduk')
+                ->leftJoin('tweb_sakit_menahun', 'tweb_penduduk.sakit_menahun_id', '=', 'tweb_sakit_menahun.id')
+                ->select(
+                    'tweb_sakit_menahun.id',
+                    DB::raw('COALESCE(tweb_sakit_menahun.nama, "Belum Terdata") AS nama'),
+                    DB::raw('COUNT(tweb_penduduk.id) AS total')
+                )
+                ->groupBy('tweb_sakit_menahun.id', 'nama')
+                ->orderBy('tweb_sakit_menahun.id', 'asc')->get();
+
+            $this->data = $result;
+            $columnChartModel = $result
+                ->reduce(
+                    function (ColumnChartModel $columnChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+                        return $columnChartModel->addColumn($nama, $value, $warna[$id]);
+                    },
+                    (new ColumnChartModel())
+                        ->setTitle('Penyakit Menahun')
+                        ->setAnimated($this->firstRun)
+                        ->withOnColumnClickEventName('onColumnClick')
+                );
+
+            $pieChartModel = $result
+                ->reduce(
+                    function (PieChartModel $pieChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+
+                        return $pieChartModel->addSlice($nama, $value, $warna[$id]);
+                    },
+                    (new PieChartModel())
+                        ->setTitle('Penyakit Menahun')
+                        ->setAnimated($this->firstRun)
+                        ->withDataLabels()
+                        ->withOnSliceClickEvent('onSliceClick')
+                );
+        } elseif ($this->jenis == "akseptorKB") {
+            $result = DB::table('tweb_penduduk')
+                ->leftJoin('tweb_cara_kb', 'tweb_penduduk.cara_kb_id', '=', 'tweb_cara_kb.id')
+                ->select(
+                    'tweb_cara_kb.id',
+                    DB::raw('COALESCE(tweb_cara_kb.nama, "Belum Terdata") AS nama'),
+                    DB::raw('COUNT(tweb_penduduk.id) AS total')
+                )
+                ->groupBy('tweb_cara_kb.id', 'nama')
+                ->orderBy('tweb_cara_kb.id', 'asc')->get();
+
+            $this->data = $result;
+            $columnChartModel = $result
+                ->reduce(
+                    function (ColumnChartModel $columnChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+                        return $columnChartModel->addColumn($nama, $value, $warna[$id]);
+                    },
+                    (new ColumnChartModel())
+                        ->setTitle('Akseptor KB')
+                        ->setAnimated($this->firstRun)
+                        ->withOnColumnClickEventName('onColumnClick')
+                );
+
+            $pieChartModel = $result
+                ->reduce(
+                    function (PieChartModel $pieChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+
+                        return $pieChartModel->addSlice($nama, $value, $warna[$id]);
+                    },
+                    (new PieChartModel())
+                        ->setTitle('Akseptor KB')
+                        ->setAnimated($this->firstRun)
+                        ->withDataLabels()
+                        ->withOnSliceClickEvent('onSliceClick')
+                );
+        } elseif ($this->jenis == "kepemilikanKtp") {
+            $result = DB::table('tweb_penduduk')
+                ->leftJoin('tweb_status_ktp', 'tweb_penduduk.status_rekam', '=', 'tweb_status_ktp.status_rekam')
+                ->select(
+                    'tweb_status_ktp.status_rekam',
+                    DB::raw('COALESCE(tweb_status_ktp.nama, "Belum Terdata") AS nama'),
+                    DB::raw('COUNT(tweb_penduduk.id) AS total')
+                )
+                ->groupBy('tweb_status_ktp.status_rekam', 'nama')
+                ->orderBy('tweb_status_ktp.status_rekam', 'asc')->get();
+
+            $this->data = $result;
+            $columnChartModel = $result
+                ->reduce(
+                    function (ColumnChartModel $columnChartModel, $data) {
+                        $id = $data->status_rekam;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->status_rekam] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+                        return $columnChartModel->addColumn($nama, $value, $warna[$id]);
+                    },
+                    (new ColumnChartModel())
+                        ->setTitle('Kepemilikan KTP')
+                        ->setAnimated($this->firstRun)
+                        ->withOnColumnClickEventName('onColumnClick')
+                );
+
+            $pieChartModel = $result
+                ->reduce(
+                    function (PieChartModel $pieChartModel, $data) {
+                        $id = $data->status_rekam;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->status_rekam] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+
+                        return $pieChartModel->addSlice($nama, $value, $warna[$id]);
+                    },
+                    (new PieChartModel())
+                        ->setTitle('Kepemilkan KTP')
+                        ->setAnimated($this->firstRun)
+                        ->withDataLabels()
+                        ->withOnSliceClickEvent('onSliceClick')
+                );
+        } elseif ($this->jenis == "asuransiKesehatan") {
+            $result = DB::table('tweb_penduduk')
+                ->leftJoin('tweb_penduduk_asuransi', 'tweb_penduduk.id_asuransi', '=', 'tweb_penduduk_asuransi.id')
+                ->select(
+                    'tweb_penduduk_asuransi.id',
+                    DB::raw('COALESCE(tweb_penduduk_asuransi.nama, "Belum Terdata") AS nama'),
+                    DB::raw('COUNT(tweb_penduduk.id) AS total')
+                )
+                ->groupBy('tweb_penduduk_asuransi.id', 'nama')
+                ->orderBy('tweb_penduduk_asuransi.id', 'asc')->get();
+
+            $this->data = $result;
+            $columnChartModel = $result
+                ->reduce(
+                    function (ColumnChartModel $columnChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+                        return $columnChartModel->addColumn($nama, $value, $warna[$id]);
+                    },
+                    (new ColumnChartModel())
+                        ->setTitle('Asuransi Kesehatan')
+                        ->setAnimated($this->firstRun)
+                        ->withOnColumnClickEventName('onColumnClick')
+                );
+
+            $pieChartModel = $result
+                ->reduce(
+                    function (PieChartModel $pieChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+
+                        return $pieChartModel->addSlice($nama, $value, $warna[$id]);
+                    },
+                    (new PieChartModel())
+                        ->setTitle('Asuransi Kesehatan')
+                        ->setAnimated($this->firstRun)
+                        ->withDataLabels()
+                        ->withOnSliceClickEvent('onSliceClick')
+                );
+        } elseif ($this->jenis == "sukuEtnis") {
+            $result = DB::table('tweb_penduduk')
+                ->leftJoin('tweb_penduduk_asuransi', 'tweb_penduduk.id_asuransi', '=', 'tweb_penduduk_asuransi.id')
+                ->select(
+                    'tweb_penduduk_asuransi.id',
+                    DB::raw('COALESCE(tweb_penduduk_asuransi.nama, "Belum Terdata") AS nama'),
+                    DB::raw('COUNT(tweb_penduduk.id) AS total')
+                )
+                ->groupBy('tweb_penduduk_asuransi.id', 'nama')
+                ->orderBy('tweb_penduduk_asuransi.id', 'asc')->get();
+
+            $this->data = $result;
+            $columnChartModel = $result
+                ->reduce(
+                    function (ColumnChartModel $columnChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+                        return $columnChartModel->addColumn($nama, $value, $warna[$id]);
+                    },
+                    (new ColumnChartModel())
+                        ->setTitle('Asuransi Kesehatan')
+                        ->setAnimated($this->firstRun)
+                        ->withOnColumnClickEventName('onColumnClick')
+                );
+
+            $pieChartModel = $result
+                ->reduce(
+                    function (PieChartModel $pieChartModel, $data) {
+                        $id = $data->id;
+                        $nama = $data->nama;
+                        $value = $data->total;
+                        $warna[$data->id] = '#' . dechex(rand(0x000000, 0xFFFFFF));
+
+                        return $pieChartModel->addSlice($nama, $value, $warna[$id]);
+                    },
+                    (new PieChartModel())
+                        ->setTitle('Asuransi Kesehatan')
                         ->setAnimated($this->firstRun)
                         ->withDataLabels()
                         ->withOnSliceClickEvent('onSliceClick')

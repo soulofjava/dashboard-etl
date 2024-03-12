@@ -39,9 +39,6 @@
                         </div>
                         <!-- /column -->
                     </div>
-                    <!-- /.row --><button type="submit" class="btn btn-primary rounded-pill btn-send mb-3"
-                    wire:click="test">Rentang Umur
-                </button>
                 </div>
 
                 @if ($show)
@@ -163,7 +160,7 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-                            </table>    
+                            </table>
                         @elseif($jenis == 'pekerjaan')
                             <table class="table">
                                 <thead>
@@ -273,7 +270,7 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-                            </table>    
+                            </table>
                         @elseif($jenis == 'wargaNegara')
                             <table class="table">
                                 <thead>
@@ -296,7 +293,139 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            @elseif($jenis == 'statusPenduduk')
+                        @elseif($jenis == 'statusPenduduk')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'golonganDarah')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'penyandangCacat')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'penyakitMenahun')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'akseptorKB')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'kepemilikanKtp')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'asuransiKesehatan')
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -383,7 +512,8 @@
                                             <li><span style="cursor:pointer"
                                                     wire:click="sukuEtnis"class="link-body">Suku / Etnis</span></li>
                                             <li><span style="cursor:pointer"
-                                                    wire:click="bpjsKes"class="link-body">BPJS Kesehatan</span></li>
+                                                    wire:click="bpjsKetenagakerjaan"class="link-body">BPJS
+                                                    Ketenagakerjaan</span></li>
                                             <li><a span style="cursor:pointer"
                                                     wire:click="statusKehamilan"class="link-body">Status Kehamilan</a>
                                             </li>
@@ -420,7 +550,7 @@
                                 <li class="mb-1">
                                     <h4> <a href="#" class="align-items-center rounded collapsed link-body"
                                             data-bs-toggle="collapse" data-bs-target="#rtm-collapse"
-                                            aria-expanded="false"> Statistik RTM 
+                                            aria-expanded="false"> Statistik RTM
                                         </a> </h4>
                                     <div class="collapse mt-1" id="rtm-collapse" style="">
                                         <ul class="btn-toggle-nav list-unstyled ps-2">
