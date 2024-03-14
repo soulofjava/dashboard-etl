@@ -72,7 +72,7 @@
                                     <div class="card shadow-lg">
                                         <div class="card-body">
                                             <h4>RTM</h4>
-                                            <p class="mb-2">{{ $rtmDesa ?? ''}}</p>
+                                            <p class="mb-2">{{ $rtmDesa ?? 0}}</p>
                                         </div>
                                         <!--/.card-body -->
                                     </div>
@@ -83,7 +83,7 @@
                                     <div class="card shadow-lg">
                                         <div class="card-body">
                                             <h4>Bantuan</h4>
-                                            <p class="mb-2">{{ $bantuanDesa ?? ''}}</p>
+                                            <p class="mb-2">{{ $bantuanDesa ?? 0}}</p>
                                         </div>
                                         <!--/.card-body -->
                                     </div>

@@ -4,10 +4,12 @@ namespace App\Livewire\Front;
 
 use App\Livewire\Front\Chart\ColumnChart;
 use App\Models\Config;
+use App\Models\Program;
 use App\Models\TwebKeluarga;
 use App\Models\TwebPenduduk;
 use App\Models\TwebPendudukPendidikanKk;
 use App\Models\TwebPendudukUmur;
+use App\Models\TwebRtm;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 use Asantibanez\LivewireCharts\Models\PieChartModel;
 use Illuminate\Support\Facades\DB;
@@ -351,8 +353,10 @@ class Statistik extends Component
             $this->configId = $this->cari->id;
         }
             $this->judul = 'Rentang Umur';
-            $this->totalPendudukDesa = TwebPenduduk::where('tweb_penduduk.config_id', '=', $this->configId)->count();
-            $this->totalKeluargaDesa = TwebKeluarga::where('tweb_keluarga.config_id', '=', $this->configId)->count();
+            $this->totalPendudukDesa = TwebPenduduk::where('config_id', '=', $this->configId)->count();
+            $this->totalKeluargaDesa = TwebKeluarga::where('config_id', '=', $this->configId)->count();
+            $this->rtmDesa = TwebRtm::where('config_id', '=', $this->configId)->count();
+            $this->bantuanDesa =  Program::where('config_id', '=' , $this->configId)->count();
             $this->data = TwebPenduduk::join('tweb_penduduk_umur', function ($join) {
                 $join->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '>=', 'tweb_penduduk_umur.dari')
                     ->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '<=', 'tweb_penduduk_umur.sampai');
