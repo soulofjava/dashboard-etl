@@ -1,4 +1,3 @@
-
 <div>
     <section class="wrapper bg-light">
         <div class="container pb-2 pb-md-1 pt-5">
@@ -50,7 +49,7 @@
                                     <div class="card shadow-lg">
                                         <div class="card-body">
                                             <h4>Penduduk</h4>
-                                            <p class="mb-2">{{ $totalPendudukDesa ?? ''}}</p>
+                                            <p class="mb-2">{{ $totalPendudukDesa ?? '' }}</p>
                                         </div>
                                         <!--/.card-body -->
                                     </div>
@@ -72,7 +71,7 @@
                                     <div class="card shadow-lg">
                                         <div class="card-body">
                                             <h4>RTM</h4>
-                                            <p class="mb-2">{{ $rtmDesa ?? 0}}</p>
+                                            <p class="mb-2">{{ $rtmDesa ?? 0 }}</p>
                                         </div>
                                         <!--/.card-body -->
                                     </div>
@@ -83,7 +82,7 @@
                                     <div class="card shadow-lg">
                                         <div class="card-body">
                                             <h4>Bantuan</h4>
-                                            <p class="mb-2">{{ $bantuanDesa ?? 0}}</p>
+                                            <p class="mb-2">{{ $bantuanDesa ?? 0 }}</p>
                                         </div>
                                         <!--/.card-body -->
                                     </div>
@@ -92,11 +91,12 @@
                                 <!--/column -->
                             </div>
                             <br>
-                
+
                         </div>
                         <div class="row align-items-center mb-2 position-relative zindex-1">
                             <div class="col-md-7 col-xl-12 pe-xl-20">
-                                <h2 class="display-12 mb-1">Data Statistik {{ $judul ?? '' }} -  Desa {{ $cari->nama_desa ?? '' }}</h2>
+                                <h2 class="display-12 mb-1">Data Statistik {{ $judul ?? '' }} - Desa
+                                    {{ $cari->nama_desa ?? '' }}</h2>
                             </div>
                             <!--/column -->
 
@@ -119,441 +119,469 @@
                         </div>
                         <br>
                         @if ($jenis == 'pendidikan_kk')
-                                <table class="table table-sm">
-                                    <thead>
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
                                         <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'pendidikan')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'rentangUmur')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'kategoriUmur')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'pekerjaan')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'statusPerkawinan')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'agama')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'jenisKelamin')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'hubunganKk')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'wargaNegara')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'statusPenduduk')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'golonganDarah')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'penyandangCacat')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'penyakitMenahun')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'akseptorKB')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'kepemilikanKtp')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'asuransiKesehatan')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'sukuEtnis')
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @elseif($jenis == 'kelasSosial')
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2" scope="col">#</th>
+                                        <th rowspan="2" scope="col">Name</th>
+                                        <th colspan="2" scope="col" style="text-align:center">Jumlah</th>
+                                        <th colspan="2" scope="col" style="text-align:center">Laki - Laki</th>
+                                        <th colspan="2" scope="col" style="text-align:center">Perempuan</th>
+
+                                    </tr>
+                                    <tr>
+                                        <th style="text-align:center;" scope="col">n</th>
+                                        <th style="text-align:center" scope="col">%</th>
+                                        <th style="text-align:center" scope="col">n</th>
+                                        <th style="text-align:center" scope="col">%</th>
+                                        <th style="text-align:center" scope="col">n</th>
+                                        <th style="text-align:center" scope="col">%</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $no = 1;
+                                        $totalpresentasi = 0;
+                                        $totallakipresen = 0;
+                                        $totalcewepresen = 0;
+                                    @endphp
+                                    @foreach ($data as $row)
+                                        <tr>
+                                            <th scope="row">{{ $no++ }}</th>
+                                            <td>{{ $row->nama }}</td>
+                                            <td>{{ $row->total }}</td>
+                                            <td>{{ number_format(($row->total / $totalKeluargaDesa) * 100, 2) }}%</td>
+                                            <td>{{ $row->laki }} </td>
+                                            <td>{{ number_format(($row->laki / $totalKeluargaDesa) * 100, 2) }}%</td>
+                                            <td>{{ $row->perempuan }}</td>
+                                            <td>{{ number_format(($row->perempuan / $totalKeluargaDesa) * 100, 2) }}%
+                                            </td>
+                                        </tr>
                                         @php
-                                            $no = 1;
+                                            $totalpresentasi += number_format(
+                                                ($row->total / $totalKeluargaDesa) * 100,
+                                                2,
+                                            );
+                                            $totallakipresen += number_format(
+                                                ($row->laki / $totalKeluargaDesa) * 100,
+                                                2,
+                                            );
+                                            $totalcewepresen += number_format(
+                                                ($row->perempuan / $totalKeluargaDesa) * 100,
+                                                2,
+                                            );
                                         @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'pendidikan')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'rentangUmur')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'kategoriUmur')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'pekerjaan')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'statusPerkawinan')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'agama')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'jenisKelamin')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'hubunganKk')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'wargaNegara')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'statusPenduduk')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'golonganDarah')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'penyandangCacat')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'penyakitMenahun')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'akseptorKB')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'kepemilikanKtp')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @elseif($jenis == 'asuransiKesehatan')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                @elseif($jenis == 'sukuEtnis')
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->total }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                @elseif($jenis == 'kelasSosial')
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th rowspan="2" scope="col">#</th>
-                                            <th rowspan="2" scope="col">Name</th>
-                                            <th colspan="2" scope="col">Laki - Laki</th>
-                                            <th colspan="2" scope="col">Perempuan</th>
-                                            <th colspan="2" scope="col">Total</th>
-                                        </tr>
-                                        <tr>
-                                            <th style="text-align:center" scope="col">Jiwa</th>
-                                            <th style="text-align:center" scope="col">%</th>
-                                            <th style="text-align:center" scope="col">Jiwa</th>
-                                            <th style="text-align:center" scope="col">%</th>
-                                            <th style="text-align:center" scope="col">Jiwa</th>
-                                            <th style="text-align:center" scope="col">%</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = 1;
-                                        @endphp
-                                        @foreach ($data as $row)
-                                            <tr>
-                                                <th scope="row">{{ $no++ }}</th>
-                                                <td>{{ $row->nama }}</td>
-                                                <td>{{ $row->laki }} </td>
-                                                <td>{{ number_format($row->laki / $totalPendudukDesa * 100, 2) }}%</td>
-                                                <td>{{ $row->perempuan }}</td>
-                                                <td>{{ number_format($row->perempuan / $totalPendudukDesa * 100, 2) }}%</td>
-                                                <td>{{ $row->total }}</td>
-                                                <td>{{ number_format($row->total / $totalPendudukDesa * 100, 2) }}%</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @else
-                                <p>tidak ada data</p>
-                            @endif
+                                    @endforeach
+                                    <tr>
+                                        <td colspan="2" class="text-center font-weight-bold">Total</td>
+                                        <td class="text-right"> {{ $jumlah }}</td>
+                                        <td class="text-right">{{ $totalpresentasi }}%</td>
+                                        <td class="text-right"> {{ $totallaki }}</td>
+                                        <td class="text-right">{{ $totallakipresen }}%</td>
+                                        <td class="text-right"> {{ $totalperem }}</td>
+                                        <td class="text-right">{{ $totalcewepresen }}%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        @else
+                            <p>tidak ada data</p>
+                        @endif
                     </div>
                     <!-- /column -->
                     <aside class="col-lg-3 sidebar">
@@ -668,10 +696,10 @@
                     </aside>
                     <!-- /column .sidebar -->
                 @else
-                <div class="col-lg-12 mt-lg-3 text-center text-lg-middle" data-cues="slideInDown" data-group="page-title"
-                data-delay="600">
-                <h4 class="display-1 mb-5 center">Data Statistik</h4>
-                <p class="lead fs-25 lh-sm mb-7 px-md-10 px-lg-0">Desa / Kelurahan belum dipilih.</p>
+                    <div class="col-lg-12 mt-lg-3 text-center text-lg-middle" data-cues="slideInDown"
+                        data-group="page-title" data-delay="600">
+                        <h4 class="display-1 mb-5 center">Data Statistik</h4>
+                        <p class="lead fs-25 lh-sm mb-7 px-md-10 px-lg-0">Desa / Kelurahan belum dipilih.</p>
 
                     </div>
                 @endif
@@ -683,15 +711,15 @@
 </div>
 
 @push('js')
-<script src="{{ asset('costum/js/columnchart.js') }}"></script>  
-<script src="{{ asset('fusioncharts/fusioncharts.js') }}"></script>
-<script src="{{ asset('fusioncharts/themes/fusioncharts.theme.ocean.js') }}"></script>
-<script>
-     document.addEventListener('livewire:init', function () {
-        window.addEventListener('column', event => {
-            var dataArray = event.detail.data;
-            columnchart(dataArray);
+    <script src="{{ asset('costum/js/columnchart.js') }}"></script>
+    <script src="{{ asset('fusioncharts/fusioncharts.js') }}"></script>
+    <script src="{{ asset('fusioncharts/themes/fusioncharts.theme.ocean.js') }}"></script>
+    <script>
+        document.addEventListener('livewire:init', function() {
+            window.addEventListener('column', event => {
+                var dataArray = event.detail.data;
+                columnchart(dataArray);
+            });
         });
-    });
-</script>
+    </script>
 @endpush
