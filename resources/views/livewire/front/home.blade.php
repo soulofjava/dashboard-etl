@@ -15,8 +15,8 @@
             <div class="col-lg-5 mt-lg-n10 text-center text-lg-start" data-cues="slideInDown" data-group="page-title"
                 data-delay="600">
                 <h1 class="display-1 mb-5">We bring solutions to make life easier.</h1>
-                <p class="lead fs-25 lh-sm mb-7 px-md-10 px-lg-0">We have considered our solutions to support every
-                    stage of your growth.</p>
+                <p class="lead fs-25 lh-sm mb-7 px-md-10 px-lg-0">
+                    We have considered our solutions to support all stages of Wonosobo Regency Growth.</p>
 
             </div>
             <!--/column -->

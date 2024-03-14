@@ -14,6 +14,7 @@ use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 use Asantibanez\LivewireCharts\Models\PieChartModel;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Illuminate\Support\Facades\Cache;
 
 class Statistik extends Component
 {
@@ -321,6 +322,26 @@ class Statistik extends Component
     {
         $this->jenis = "sukuEtnis";
         $this->judul = 'Suku / Etnis';
+        // $this->data = DB::table(DB::raw('(SELECT COALESCE(suku, \'\') AS suku FROM tweb_penduduk) as a'))
+        // ->select('a.suku', DB::raw('COUNT(a.suku) as jumlah'))
+        // ->groupBy('a.suku')
+        // ->get();
+        $value = Cache::remember("suku-".$this->configId,60*60, function () {
+            return  DB::select("SELECT a.suku AS nama, COUNT(a.suku) AS total 
+            FROM 
+                (SELECT 
+                    CASE 
+                        WHEN suku IS NULL THEN 'Belum Terdata' 
+                        WHEN suku = '' THEN 'Belum Terdata' 
+                        ELSE suku 
+                    END AS suku 
+                FROM tweb_penduduk) a 
+            GROUP BY a.suku;");
+        });
+         $this->data = $value;
+       
+        
+        $this->dispatch('column', data:$this->data);
     }
     public function bpjsKetenagakerjaan()
     {
@@ -336,6 +357,17 @@ class Statistik extends Component
     {
         $this->jenis = "kelasSosial";
         $this->judul = 'kelas Sosial';
+        $this->data = DB::select('SELECT u.*, 
+                COUNT(k.id) AS total,
+                COUNT(CASE WHEN k.kelas_sosial = u.id AND p.sex = 1 THEN p.id END) AS laki,
+                COUNT(CASE WHEN k.kelas_sosial = u.id AND p.sex = 2 THEN p.id END) AS perempuan
+            FROM tweb_keluarga_sejahtera AS u
+            LEFT JOIN (tweb_keluarga AS k LEFT JOIN tweb_penduduk AS p ON k.nik_kepala = p.id) ON k.kelas_sosial = u.id 
+            WHERE k.config_id = '.$this->configId.'
+            GROUP BY u.id
+            ORDER BY u.id ASC;');
+
+        $this->dispatch('column', data:$this->data);
     }
     public function bantuanPenduduk()
     {

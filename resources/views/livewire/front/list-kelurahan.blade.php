@@ -8,6 +8,7 @@
                 </div>
                 <div class="blog grid grid-view">
                     <div class="row isotope gx-md-8 gy-8 mb-8">
+                        @foreach ( $kelurahan as $k)
                         <article class="item post col-md-4">
                             <div class="card">
                                 <figure class="card-img-top overlay overlay-1 hover-scale"><a href="#"> <img
@@ -20,32 +21,26 @@
                                 </figure>
                                 <div class="card-body">
                                     <div class="post-header">
-                                        <div class="post-category text-line">
-                                            <a href="#" class="hover" rel="category">Coding</a>
+                                        <div class="post-category uil uil-link">
+                                            <a href="{{ $k->website }}" class="hover" rel="category">{{ $k->nama_desa }}</a>
                                         </div>
                                         <!-- /.post-category -->
-                                        <h2 class="post-title h3 mt-1 mb-3"><a class="link-dark"
-                                                href="./blog-post.html">Ligula
-                                                tristique quis risus</a></h2>
-                                    </div>
+                                      
                                     <!-- /.post-header -->
-                                    <div class="post-content">
-                                        <p>Mauris convallis non ligula non interdum. Gravida vulputate convallis tempus
-                                            vestibulum
-                                            cras imperdiet nun eu dolor. Aenean lacinia bibendum nulla sed.</p>
+                                    <div class="post-meta" style="font-size: medium; text-align:left;">
+                                        <p>{{ $k->alamat_kantor }}</p>
                                     </div>
                                     <!-- /.post-content -->
                                 </div>
                                 <!--/.card-body -->
-                                <div class="card-footer">
-                                    <ul class="post-meta d-flex mb-0">
-                                        <li class="post-date"><i class="uil uil-calendar-alt"></i><span>14 Apr
-                                                2022</span>
+                                <div>
+                                    <ul class="post-meta">
+                                        <li class="post-date"><i class="uil uil-users-alt"></i><span> {{ $k->penduduk->count() }} Penduduk</span>
                                         </li>
-                                        <li class="post-comments"><a href="#"><i class="uil uil-comment"></i>4</a>
+                                        <li class="post-comments"><a href="#"><i class="uil uil-chat-bubble-user"></i>{{ $k->keluarga->count() }} Keluarga</a>
                                         </li>
                                         <li class="post-likes ms-auto"><a href="#"><i
-                                                    class="uil uil-heart-alt"></i>5</a></li>
+                                                    class="uil uil-heart-alt"></i>{{ $k->rtm->count() }} RTM</a></li>
                                     </ul>
                                     <!-- /.post-meta -->
                                 </div>
@@ -53,145 +48,8 @@
                             </div>
                             <!-- /.card -->
                         </article>
-                        <!-- /.post -->
-                        <article class="item post col-md-4">
-                            <div class="card">
-                                <figure class="card-img-top overlay overlay-1 hover-scale"><a href="#"> <img
-                                            src="{{ asset('costum/img') }}./kelurahan-1.jpg"
-                                            style="object-fit:cover; object-position: right; width:200px; height:300px;"
-                                            alt="" /></a>
-                                    <figcaption>
-                                        <h5 class="from-top mb-0">Read More</h5>
-                                    </figcaption>
-                                </figure>
-                                <div class="card-body">
-                                    <div class="post-header">
-                                        <div class="post-category text-line">
-                                            <a href="#" class="hover" rel="category">Workspace</a>
-                                        </div>
-                                        <!-- /.post-category -->
-                                        <h2 class="post-title h3 mt-1 mb-3"><a class="link-dark"
-                                                href="./blog-post.html">Nullam id
-                                                dolor elit id nibh</a></h2>
-                                    </div>
-                                    <!-- /.post-header -->
-                                    <div class="post-content">
-                                        <p>Mauris convallis non ligula non interdum. Gravida vulputate convallis tempus
-                                            vestibulum
-                                            cras imperdiet nun eu dolor. Aenean lacinia bibendum nulla sed.</p>
-                                    </div>
-                                    <!-- /.post-content -->
-                                </div>
-                                <!--/.card-body -->
-                                <div class="card-footer">
-                                    <ul class="post-meta d-flex mb-0">
-                                        <li class="post-date"><i class="uil uil-calendar-alt"></i><span>29 Mar
-                                                2022</span>
-                                        </li>
-                                        <li class="post-comments"><a href="#"><i class="uil uil-comment"></i>3</a>
-                                        </li>
-                                        <li class="post-likes ms-auto"><a href="#"><i
-                                                    class="uil uil-heart-alt"></i>3</a></li>
-                                    </ul>
-                                    <!-- /.post-meta -->
-                                </div>
-                                <!-- /.card-footer -->
-                            </div>
-                            <!-- /.card -->
-                        </article>
-                        <!-- /.post -->
-                        <article class="item post col-md-4">
-                            <div class="card">
-                                <figure class="card-img-top overlay overlay-1 hover-scale"><a href="#"> <img
-                                            src="{{ asset('costum/img') }}./kelurahan-1.jpg"
-                                            style="object-fit:cover; object-position: right; width:200px; height:300px;"
-                                            alt="" /></a>
-                                    <figcaption>
-                                        <h5 class="from-top mb-0">Read More</h5>
-                                    </figcaption>
-                                </figure>
-                                <div class="card-body">
-                                    <div class="post-header">
-                                        <div class="post-category text-line">
-                                            <a href="#" class="hover" rel="category">Meeting</a>
-                                        </div>
-                                        <!-- /.post-category -->
-                                        <h2 class="post-title h3 mt-1 mb-3"><a class="link-dark"
-                                                href="./blog-post.html">Ultricies
-                                                fusce porta elit</a></h2>
-                                    </div>
-                                    <!-- /.post-header -->
-                                    <div class="post-content">
-                                        <p>Mauris convallis non ligula non interdum. Gravida vulputate convallis tempus
-                                            vestibulum
-                                            cras imperdiet nun eu dolor. Aenean lacinia bibendum nulla sed.</p>
-                                    </div>
-                                    <!-- /.post-content -->
-                                </div>
-                                <!--/.card-body -->
-                                <div class="card-footer">
-                                    <ul class="post-meta d-flex mb-0">
-                                        <li class="post-date"><i class="uil uil-calendar-alt"></i><span>26 Feb
-                                                2022</span>
-                                        </li>
-                                        <li class="post-comments"><a href="#"><i class="uil uil-comment"></i>6</a>
-                                        </li>
-                                        <li class="post-likes ms-auto"><a href="#"><i
-                                                    class="uil uil-heart-alt"></i>3</a></li>
-                                    </ul>
-                                    <!-- /.post-meta -->
-                                </div>
-                                <!-- /.card-footer -->
-                            </div>
-                            <!-- /.card -->
-                        </article>
-                        <!-- /.post -->
-                        <article class="item post col-md-4">
-                            <div class="card">
-                                <figure class="card-img-top overlay overlay-1 hover-scale"><a href="#"> <img
-                                            src="{{ asset('costum/img') }}./kelurahan-1.jpg"
-                                            style="object-fit:cover; object-position: right; width:200px; height:300px;"
-                                            alt="" /></a>
-                                    <figcaption>
-                                        <h5 class="from-top mb-0">Read More</h5>
-                                    </figcaption>
-                                </figure>
-                                <div class="card-body">
-                                    <div class="post-header">
-                                        <div class="post-category text-line">
-                                            <a href="#" class="hover" rel="category">Business Tips</a>
-                                        </div>
-                                        <!-- /.post-category -->
-                                        <h2 class="post-title h3 mt-1 mb-3"><a class="link-dark"
-                                                href="./blog-post.html">Morbi leo
-                                                risus porta eget</a></h2>
-                                    </div>
-                                    <div class="post-content">
-                                        <p>Mauris convallis non ligula non interdum. Gravida vulputate convallis tempus
-                                            vestibulum
-                                            cras imperdiet nun eu dolor. Aenean lacinia bibendum nulla sed.</p>
-                                    </div>
-                                    <!-- /.post-content -->
-                                </div>
-                                <!--/.card-body -->
-                                <div class="card-footer">
-                                    <ul class="post-meta d-flex mb-0">
-                                        <li class="post-date"><i class="uil uil-calendar-alt"></i><span>7 Jan
-                                                2022</span>
-                                        </li>
-                                        <li class="post-comments"><a href="#"><i
-                                                    class="uil uil-comment"></i>2</a>
-                                        </li>
-                                        <li class="post-likes ms-auto"><a href="#"><i
-                                                    class="uil uil-heart-alt"></i>5</a>
-                                        </li>
-                                    </ul>
-                                    <!-- /.post-meta -->
-                                </div>
-                                <!-- /.card-footer -->
-                            </div>
-                            <!-- /.card -->
-                        </article>
+                        @endforeach
+                        
                         <!-- /.post -->
                     </div>
                     <!-- /.row -->

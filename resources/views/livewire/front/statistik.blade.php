@@ -492,6 +492,65 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                                @elseif($jenis == 'sukuEtnis')
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $no = 1;
+                                        @endphp
+                                        @foreach ($data as $row)
+                                            <tr>
+                                                <th scope="row">{{ $no++ }}</th>
+                                                <td>{{ $row->nama }}</td>
+                                                <td>{{ $row->total }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                @elseif($jenis == 'kelasSosial')
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2" scope="col">#</th>
+                                            <th rowspan="2" scope="col">Name</th>
+                                            <th colspan="2" scope="col">Laki - Laki</th>
+                                            <th colspan="2" scope="col">Perempuan</th>
+                                            <th colspan="2" scope="col">Total</th>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align:center" scope="col">Jiwa</th>
+                                            <th style="text-align:center" scope="col">%</th>
+                                            <th style="text-align:center" scope="col">Jiwa</th>
+                                            <th style="text-align:center" scope="col">%</th>
+                                            <th style="text-align:center" scope="col">Jiwa</th>
+                                            <th style="text-align:center" scope="col">%</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $no = 1;
+                                        @endphp
+                                        @foreach ($data as $row)
+                                            <tr>
+                                                <th scope="row">{{ $no++ }}</th>
+                                                <td>{{ $row->nama }}</td>
+                                                <td>{{ $row->laki }} </td>
+                                                <td>{{ number_format($row->laki / $totalPendudukDesa * 100, 2) }}%</td>
+                                                <td>{{ $row->perempuan }}</td>
+                                                <td>{{ number_format($row->perempuan / $totalPendudukDesa * 100, 2) }}%</td>
+                                                <td>{{ $row->total }}</td>
+                                                <td>{{ number_format($row->total / $totalPendudukDesa * 100, 2) }}%</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             @else
                                 <p>tidak ada data</p>
                             @endif

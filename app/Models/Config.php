@@ -11,4 +11,16 @@ class Config extends Model
 
     protected $table = 'config';
     protected $guarded = [];
+
+    public function penduduk(){
+        return $this->hasMany(TwebPenduduk::class, "config_id");
+    }
+
+    public function keluarga(){
+        return $this->hasMany(TwebKeluarga::class, "config_id");
+    }
+
+    public function rtm(){
+        return $this->hasMany(TwebRtm::class, "config_id");
+    }
 }
