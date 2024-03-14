@@ -97,6 +97,7 @@ class Statistik extends Component
                     DB::raw('COALESCE(tweb_penduduk_pendidikan.nama, "Belum Terdata") AS nama'),
                     DB::raw('COUNT(tweb_penduduk.id) AS total')
                 )
+                ->where('tweb_penduduk.config_id', '=', $this->configId)
                 ->groupBy('tweb_penduduk_pendidikan.id', 'nama')
                 ->orderBy('tweb_penduduk_pendidikan.id', 'asc')
                 ->get();
@@ -113,6 +114,7 @@ class Statistik extends Component
                     DB::raw('COALESCE(tweb_penduduk_pekerjaan.nama, "Belum Terdata") AS nama'),
                     DB::raw('COUNT(tweb_penduduk.id) AS total')
                 )
+                ->where('tweb_penduduk.config_id', '=', $this->configId)
                 ->groupBy('tweb_penduduk_pekerjaan.id', 'nama')
                 ->orderBy('tweb_penduduk_pekerjaan.id', 'asc')->get();
         $this->dispatch('column', data:$this->data);
@@ -128,6 +130,7 @@ class Statistik extends Component
                     DB::raw('COALESCE(tweb_penduduk_kawin.nama, "Belum Terdata") AS nama'),
                     DB::raw('COUNT(tweb_penduduk.id) AS total')
                 )
+                ->where('tweb_penduduk.config_id', '=', $this->configId)
                 ->groupBy('tweb_penduduk_kawin.id', 'nama')
                 ->orderBy('tweb_penduduk_kawin.id', 'asc')
                 ->get();
@@ -144,6 +147,7 @@ class Statistik extends Component
                     DB::raw('COALESCE(tweb_penduduk_agama.nama, "Belum Terdata") AS nama'),
                     DB::raw('COUNT(tweb_penduduk.id) AS total')
                 )
+                ->where('tweb_penduduk.config_id', '=', $this->configId)
                 ->groupBy('tweb_penduduk_agama.id', 'nama')
                 ->orderBy('tweb_penduduk_agama.id', 'asc')->get();
         $this->dispatch('column', data:$this->data);
@@ -159,6 +163,7 @@ class Statistik extends Component
                     DB::raw('COALESCE(tweb_penduduk_sex.nama, "Belum Terdata") AS nama'),
                     DB::raw('COUNT(tweb_penduduk.id) AS total')
                 )
+                ->where('tweb_penduduk.config_id', '=', $this->configId)
                 ->groupBy('tweb_penduduk_sex.id', 'nama')
                 ->orderBy('tweb_penduduk_sex.id', 'asc')->get();
         $this->dispatch('column', data:$this->data);
@@ -174,6 +179,7 @@ class Statistik extends Component
             DB::raw('COALESCE(tweb_penduduk_hubungan.nama, "Belum Terdata") AS nama'),
             DB::raw('COUNT(tweb_penduduk.id) AS total')
         )
+        ->where('tweb_penduduk.config_id', '=', $this->configId)
         ->groupBy('tweb_penduduk_hubungan.id', 'nama')
         ->orderBy('tweb_penduduk_hubungan.id', 'asc')->get();
         $this->dispatch('column', data:$this->data);
@@ -189,6 +195,7 @@ class Statistik extends Component
             DB::raw('COALESCE(tweb_penduduk_warganegara.nama, "Belum Terdata") AS nama'),
             DB::raw('COUNT(tweb_penduduk.id) AS total')
         )
+        ->where('tweb_penduduk.config_id', '=', $this->configId)
         ->groupBy('tweb_penduduk_warganegara.id', 'nama')
         ->orderBy('tweb_penduduk_warganegara.id', 'asc')->get();
         $this->dispatch('column', data:$this->data);
@@ -204,6 +211,7 @@ class Statistik extends Component
                     DB::raw('COALESCE(tweb_penduduk_status.nama, "Belum Terdata") AS nama'),
                     DB::raw('COUNT(tweb_penduduk.id) AS total')
                 )
+                ->where('tweb_penduduk.config_id', '=', $this->configId)
                 ->groupBy('tweb_penduduk_status.id', 'nama')
                 ->orderBy('tweb_penduduk_status.id', 'asc')->get();
         $this->dispatch('column', data:$this->data);
@@ -219,6 +227,7 @@ class Statistik extends Component
             DB::raw('COALESCE(tweb_golongan_darah.nama, "Belum Terdata") AS nama'),
             DB::raw('COUNT(tweb_penduduk.id) AS total')
         )
+        ->where('tweb_penduduk.config_id', '=', $this->configId)
         ->groupBy('tweb_golongan_darah.id', 'nama')
         ->orderBy('tweb_golongan_darah.id', 'asc')->get();
         $this->dispatch('column', data:$this->data);
@@ -234,6 +243,7 @@ class Statistik extends Component
             DB::raw('COALESCE(tweb_cacat.nama, "Belum Terdata") AS nama'),
             DB::raw('COUNT(tweb_penduduk.id) AS total')
         )
+        ->where('tweb_penduduk.config_id', '=', $this->configId)
         ->groupBy('tweb_cacat.id', 'nama')
         ->orderBy('tweb_cacat.id', 'asc')->get();
         $this->dispatch('column', data:$this->data);
@@ -249,6 +259,7 @@ class Statistik extends Component
             DB::raw('COALESCE(tweb_sakit_menahun.nama, "Belum Terdata") AS nama'),
             DB::raw('COUNT(tweb_penduduk.id) AS total')
         )
+        ->where('tweb_penduduk.config_id', '=', $this->configId)
         ->groupBy('tweb_sakit_menahun.id', 'nama')
         ->orderBy('tweb_sakit_menahun.id', 'asc')->get();
         $this->dispatch('column', data:$this->data);
@@ -264,6 +275,7 @@ class Statistik extends Component
             DB::raw('COALESCE(tweb_cara_kb.nama, "Belum Terdata") AS nama'),
             DB::raw('COUNT(tweb_penduduk.id) AS total')
         )
+        ->where('tweb_penduduk.config_id', '=', $this->configId)
         ->groupBy('tweb_cara_kb.id', 'nama')
         ->orderBy('tweb_cara_kb.id', 'asc')->get();
         $this->dispatch('column', data:$this->data);
@@ -279,6 +291,7 @@ class Statistik extends Component
             DB::raw('COALESCE(tweb_status_ktp.nama, "Belum Terdata") AS nama'),
             DB::raw('COUNT(tweb_penduduk.id) AS total')
         )
+        ->where('tweb_penduduk.config_id', '=', $this->configId)
         ->groupBy('tweb_status_ktp.status_rekam', 'nama')
         ->orderBy('tweb_status_ktp.status_rekam', 'asc')->get();
         $this->dispatch('column', data:$this->data);
@@ -294,6 +307,7 @@ class Statistik extends Component
             DB::raw('COALESCE(tweb_penduduk_asuransi.nama, "Belum Terdata") AS nama'),
             DB::raw('COUNT(tweb_penduduk.id) AS total')
         )
+        ->where('tweb_penduduk.config_id', '=', $this->configId)
         ->groupBy('tweb_penduduk_asuransi.id', 'nama')
         ->orderBy('tweb_penduduk_asuransi.id', 'asc')->get();
         $this->dispatch('column', data:$this->data);
