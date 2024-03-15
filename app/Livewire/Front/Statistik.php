@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Cache;
 
 class Statistik extends Component
 {
-    public $selectKecamatan, $selectDesa, $listDesa, $show, $jenis = '', $configId, $data, $jumlah, $totallaki, $totalperem, $cari, $judul;
+    public $selectKecamatan, $selectDesa, $listDesa, $show, $jenis = '', $configId, $data, $jumlah, $totallaki, $totalperem, $cari, $judul, $baris_belum = [], $baris_total = [], $baris_jumlah = [];
     public $totalPendudukDesa, $totalKeluargaDesa, $rtmDesa, $bantuanDesa;
     public $firstRun = true;
     protected $listeners = [
@@ -353,28 +353,53 @@ class Statistik extends Component
         $this->jenis = "statusKehamilan";
         $this->judul = 'Status Kehamilan';
     }
+    public function data_jml_semua_penduduk(){
+        $semua = DB::select('SELECT 
+                COUNT(k.id) as jumlah,
+                COUNT(CASE WHEN p.sex = 1 THEN p.id END) AS laki,
+                COUNT(CASE WHEN p.sex = 2 THEN p.id END) AS perempuan
+            FROM keluarga_aktif k
+            LEFT JOIN tweb_penduduk p ON p.id = k.nik_kepala
+            LEFT JOIN tweb_wil_clusterdesa a ON p.id_cluster = a.id;');
+            return $semua;
+    }
     public function kelasSosial()
     {
         $this->jenis = "kelasSosial";
         $this->judul = 'kelas Sosial';
         $this->data = DB::select('
-                    SELECT 
-                        u.*, 
-                        COUNT(k.id) AS total,
-                        COUNT(IF(k.kelas_sosial = u.id AND p.sex = 1, p.id, NULL)) AS laki,
-                        COUNT(IF(k.kelas_sosial = u.id AND p.sex = 2, p.id, NULL)) AS perempuan
-                    FROM tweb_keluarga_sejahtera u
-                    LEFT JOIN keluarga_aktif k ON k.kelas_sosial = u.id AND k.config_id = ' . $this->configId . '
-                    LEFT JOIN tweb_penduduk p ON p.id = k.nik_kepala
-                    GROUP BY u.id');
+                            SELECT u.*, 
+                        COUNT(CASE WHEN k.kelas_sosial = u.id AND p.sex = 1 THEN p.id END) + COUNT(CASE WHEN k.kelas_sosial = u.id AND p.sex = 2 THEN p.id END) AS total,
+                        COUNT(CASE WHEN k.kelas_sosial = u.id AND p.sex = 1 THEN p.id END) AS laki,
+                        COUNT(CASE WHEN k.kelas_sosial = u.id AND p.sex = 2 THEN p.id END) AS perempuan
+                    FROM tweb_keluarga_sejahtera AS u
+                    LEFT JOIN tweb_keluarga AS k ON k.kelas_sosial = u.id
+                    LEFT JOIN tweb_penduduk AS p ON k.nik_kepala = p.id AND p.status_dasar = 1
+                    WHERE k.config_id = 1
+                    GROUP BY u.id
+                    ORDER BY u.id ASC;');
+      
         $datastring = json_decode(json_encode($this->data), true);
         $this->jumlah = 0;
         $this->totallaki = 0;
         $this->totalperem = 0;
+        //menghitung jumlah
         foreach ($datastring as $row) {
             $this->jumlah += $row['total'];
             $this->totallaki += $row['laki'];
             $this->totalperem += $row['perempuan'];
+        }
+        //menghitung semua total
+        foreach($this->data_jml_semua_penduduk() as $row){
+            $this->baris_total['jumlah'] = $row->jumlah;
+            $this->baris_total['laki'] = $row->laki;
+            $this->baris_total['cewe'] = $row->perempuan;
+        }
+        //menghitung sisa 
+        foreach($this->data_jml_semua_penduduk() as $row){
+            $this->baris_belum['jumlah'] = $row->jumlah - $this->jumlah;
+            $this->baris_belum['laki'] = $row->laki - $this->totallaki;
+            $this->baris_belum['cewe'] = $row->perempuan - $this->totalperem;
         }
         $this->dispatch('column', data: $this->data);
     }

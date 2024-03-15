@@ -526,12 +526,12 @@
 
                                     </tr>
                                     <tr>
-                                        <th style="text-align:center;" scope="col">n</th>
-                                        <th style="text-align:center" scope="col">%</th>
-                                        <th style="text-align:center" scope="col">n</th>
-                                        <th style="text-align:center" scope="col">%</th>
-                                        <th style="text-align:center" scope="col">n</th>
-                                        <th style="text-align:center" scope="col">%</th>
+                                        <th scope="col">n</th>
+                                        <th scope="col">%</th>
+                                        <th scope="col">n</th>
+                                        <th scope="col">%</th>
+                                        <th scope="col">n</th>
+                                        <th scope="col">%</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -546,36 +546,54 @@
                                             <th scope="row">{{ $no++ }}</th>
                                             <td>{{ $row->nama }}</td>
                                             <td>{{ $row->total }}</td>
-                                            <td>{{ number_format(($row->total / $totalKeluargaDesa) * 100, 2) }}%</td>
+                                            <td>{{ number_format(($row->total / $baris_total['jumlah']) * 100, 2) }}%</td>
                                             <td>{{ $row->laki }} </td>
-                                            <td>{{ number_format(($row->laki / $totalKeluargaDesa) * 100, 2) }}%</td>
+                                            <td>{{ number_format(($row->laki / $baris_total['jumlah']) * 100, 2) }}%</td>
                                             <td>{{ $row->perempuan }}</td>
-                                            <td>{{ number_format(($row->perempuan / $totalKeluargaDesa) * 100, 2) }}%
+                                            <td>{{ number_format(($row->perempuan / $baris_total['jumlah']) * 100, 2) }}%
                                             </td>
                                         </tr>
                                         @php
                                             $totalpresentasi += number_format(
-                                                ($row->total / $totalKeluargaDesa) * 100,
+                                                ($row->total / $baris_total['jumlah']) * 100,
                                                 2,
                                             );
                                             $totallakipresen += number_format(
-                                                ($row->laki / $totalKeluargaDesa) * 100,
+                                                ($row->laki / $baris_total['jumlah']) * 100,
                                                 2,
                                             );
                                             $totalcewepresen += number_format(
-                                                ($row->perempuan / $totalKeluargaDesa) * 100,
+                                                ($row->perempuan / $baris_total['jumlah']) * 100,
                                                 2,
                                             );
                                         @endphp
                                     @endforeach
                                     <tr>
-                                        <td colspan="2" class="text-center font-weight-bold">Total</td>
+                                        <td colspan="2" class="text-center font-weight-bold">jumlah</td>
                                         <td class="text-right"> {{ $jumlah }}</td>
-                                        <td class="text-right">{{ $totalpresentasi }}%</td>
+                                        <td class="text-right">{{ $totalpresentasi }} %</td>
                                         <td class="text-right"> {{ $totallaki }}</td>
-                                        <td class="text-right">{{ $totallakipresen }}%</td>
+                                        <td class="text-right">{{ $totallakipresen }} %</td>
                                         <td class="text-right"> {{ $totalperem }}</td>
-                                        <td class="text-right">{{ $totalcewepresen }}%</td>
+                                        <td class="text-right">{{ $totalcewepresen }} %</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="text-center font-weight-bold">Belum Mengisi</td>
+                                        <td class="text-right"> {{ $baris_belum['jumlah'] }}</td>
+                                        <td class="text-right">%</td>
+                                        <td class="text-right"> {{ $baris_belum['laki'] }}</td>
+                                        <td class="text-right">%</td>
+                                        <td class="text-right"> {{ $baris_belum['cewe'] }}</td>
+                                        <td class="text-right">%</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="text-center font-weight-bold">Total</td>
+                                        <td class="text-right"> {{ $baris_total['jumlah'] }}</td>
+                                        <td class="text-right">%</td>
+                                        <td class="text-right"> {{ $baris_total['laki'] }}</td>
+                                        <td class="text-right">%</td>
+                                        <td class="text-right"> {{ $baris_total['cewe'] }}</td>
+                                        <td class="text-right">%</td>
                                     </tr>
                                 </tbody>
                             </table>
