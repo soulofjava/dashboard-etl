@@ -74,11 +74,11 @@ class Statistik extends Component
             $this->totallaki += $row['laki'];
             $this->totalperem += $row['perempuan'];
         }
-        foreach ($this->data_jml_semua_penduduk() as $data) {
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
             $this->menghitungBarisTotal($data);
         }
         //menghitung sisa 
-        foreach ($this->data_jml_semua_penduduk() as $data) {
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
             $this->menghitungBarisBelum($data);
         }
         $this->dispatch('column', data: $this->data);
@@ -87,32 +87,82 @@ class Statistik extends Component
     {
         $this->jenis = "kategoriUmur";
         $this->judul = 'Kategori Umur';
-        $this->data = TwebPenduduk::join('tweb_penduduk_umur', function ($join) {
-            $join->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '>=', 'tweb_penduduk_umur.dari')
-                ->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '<=', 'tweb_penduduk_umur.sampai');
-        })
-            ->where('tweb_penduduk.config_id', '=', $this->configId)
-            ->whereBetween('tweb_penduduk_umur.id', [1, 4])
-            ->groupBy('tweb_penduduk_umur.id', 'tweb_penduduk_umur.nama')
-            ->orderBy('tweb_penduduk_umur.nama', 'asc')
-            ->select('tweb_penduduk_umur.id as id', DB::raw('COALESCE(tweb_penduduk_umur.nama, "Belum Terdata") AS nama'), DB::raw('COUNT(*) as total'))
-            ->get();
+        $this->data = DB::select("SELECT u.nama,
+        ((SELECT COUNT(b.id)
+          FROM penduduk_hidup b
+          LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
+          WHERE (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari
+          AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai)) as total,
+        ((SELECT COUNT(b.id)
+          FROM penduduk_hidup b
+          LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
+          WHERE (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari
+          AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai
+          AND b.sex = '1')) as laki,
+        ((SELECT COUNT(b.id)
+          FROM penduduk_hidup b
+          LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
+          WHERE (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari
+          AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai
+          AND b.sex = '2')) as perempuan
+    FROM
+        tweb_penduduk_umur u
+    WHERE
+        u.status = '0'
+         GROUP BY u.id;");
+        $datastring = json_decode(json_encode($this->data), true);
+        $this->jumlah = 0;
+        $this->totallaki = 0;
+        $this->totalperem = 0;
+        //menghitung jumlah
+        foreach ($datastring as $row) {
+            $this->jumlah += $row['total'];
+            $this->totallaki += $row['laki'];
+            $this->totalperem += $row['perempuan'];
+        }
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisTotal($data);
+        }
+        //menghitung sisa 
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisBelum($data);
+        }
         $this->dispatch('column', data: $this->data);
     }
     public function pendidikanKk()
     {
         $this->jenis = "pendidikan_kk";
         $this->judul = 'Pendidikan Dalam KK';
-        $this->data = DB::table('tweb_penduduk')
-            ->leftjoin('tweb_penduduk_pendidikan_kk', 'tweb_penduduk.pendidikan_kk_id', '=', 'tweb_penduduk_pendidikan_kk.id')
-            ->select(
-                'tweb_penduduk_pendidikan_kk.id',
-                DB::raw('COALESCE(tweb_penduduk_pendidikan_kk.nama, "Belum Terdata") AS nama'),
-                DB::raw('COUNT(tweb_penduduk_pendidikan_kk.id) AS total')
-            )
-            ->where('tweb_penduduk.config_id', '=', $this->configId)
-            ->groupBy('tweb_penduduk_pendidikan_kk.id')
-            ->orderBy('tweb_penduduk_pendidikan_kk.id', 'asc')->get();
+        $this->data = DB::select('SELECT 
+                        u.*,
+                        COUNT(p.id) AS total,
+                        COUNT(CASE WHEN p.sex = 1 THEN p.id END) AS laki,
+                        COUNT(CASE WHEN p.sex = 2 THEN p.id END) AS perempuan
+                    FROM 
+                        tweb_penduduk_pendidikan_kk u
+                    LEFT JOIN 
+                        penduduk_hidup p ON u.id = p.pendidikan_kk_id AND p.config_id = 1
+                    LEFT JOIN 
+                        tweb_wil_clusterdesa a ON p.id_cluster = a.id
+                    GROUP BY 
+                        u.id;');
+        $datastring = json_decode(json_encode($this->data), true);
+        $this->jumlah = 0;
+        $this->totallaki = 0;
+        $this->totalperem = 0;
+        //menghitung jumlah
+        foreach ($datastring as $row) {
+            $this->jumlah += $row['total'];
+            $this->totallaki += $row['laki'];
+            $this->totalperem += $row['perempuan'];
+        }
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisTotal($data);
+        }
+        //menghitung sisa 
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisBelum($data);
+        }
         $this->dispatch('column', data: $this->data);
     }
 
@@ -391,6 +441,17 @@ class Statistik extends Component
             FROM keluarga_aktif k
             LEFT JOIN tweb_penduduk p ON p.id = k.nik_kepala
             LEFT JOIN tweb_wil_clusterdesa a ON p.id_cluster = a.id;');
+        return $semua;
+    }
+
+    public function data_jml_penduduk_hidup()
+    {
+        $semua = DB::select('SELECT COUNT(`tweb_penduduk`.`id`) AS jumlah,
+            COUNT(CASE WHEN `tweb_penduduk`.`sex` = 1 THEN `tweb_penduduk`.`id` END) AS laki,
+            COUNT(CASE WHEN `tweb_penduduk`.`sex` = 2 THEN `tweb_penduduk`.`id` END) AS perempuan
+        FROM `tweb_penduduk` 
+        LEFT JOIN `tweb_wil_clusterdesa` AS a ON `tweb_penduduk`.`id_cluster` = `a`.`id` 
+        WHERE `tweb_penduduk`.`status_dasar` = 1;');
         return $semua;
     }
     public function kelasSosial()
