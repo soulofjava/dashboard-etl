@@ -118,7 +118,7 @@
                             </div>
                         </div>
                         <br>
-                        @if ($jenis == 'pendidikan_kk')
+                        {{-- @if ($jenis == 'pendidikan_kk')
                             <table class="table table-sm">
                                 <thead>
                                     <tr>
@@ -514,7 +514,8 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                        @elseif($jenis == 'kelasSosial')
+                        @elseif($jenis == 'kelasSosial') --}}
+                        @if ($data)
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
@@ -546,9 +547,11 @@
                                             <th scope="row">{{ $no++ }}</th>
                                             <td>{{ $row->nama }}</td>
                                             <td>{{ $row->total }}</td>
-                                            <td>{{ number_format(($row->total / $baris_total['jumlah']) * 100, 2) }}%</td>
+                                            <td>{{ number_format(($row->total / $baris_total['jumlah']) * 100, 2) }}%
+                                            </td>
                                             <td>{{ $row->laki }} </td>
-                                            <td>{{ number_format(($row->laki / $baris_total['jumlah']) * 100, 2) }}%</td>
+                                            <td>{{ number_format(($row->laki / $baris_total['jumlah']) * 100, 2) }}%
+                                            </td>
                                             <td>{{ $row->perempuan }}</td>
                                             <td>{{ number_format(($row->perempuan / $baris_total['jumlah']) * 100, 2) }}%
                                             </td>
@@ -580,20 +583,24 @@
                                     <tr>
                                         <td colspan="2" class="text-center font-weight-bold">Belum Mengisi</td>
                                         <td class="text-right"> {{ $baris_belum['jumlah'] }}</td>
-                                        <td class="text-right">%</td>
+                                        <td class="text-right">{{ $baris_persen_belum['jumlah'] }} %</td>
                                         <td class="text-right"> {{ $baris_belum['laki'] }}</td>
-                                        <td class="text-right">%</td>
+                                        <td class="text-right">{{ $baris_persen_belum['laki'] }} %</td>
                                         <td class="text-right"> {{ $baris_belum['cewe'] }}</td>
-                                        <td class="text-right">%</td>
+                                        <td class="text-right">{{ $baris_persen_belum['cewe'] }} %</td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="text-center font-weight-bold">Total</td>
                                         <td class="text-right"> {{ $baris_total['jumlah'] }}</td>
-                                        <td class="text-right">%</td>
+                                        <td class="text-right">{{ $totalpresentasi + $baris_persen_belum['jumlah'] }}
+                                            %
+                                        </td>
                                         <td class="text-right"> {{ $baris_total['laki'] }}</td>
-                                        <td class="text-right">%</td>
+                                        <td class="text-right">{{ $totallakipresen + $baris_persen_belum['laki'] }}%
+                                        </td>
                                         <td class="text-right"> {{ $baris_total['cewe'] }}</td>
-                                        <td class="text-right">%</td>
+                                        <td class="text-right">{{ $totalcewepresen + $baris_persen_belum['cewe'] }}%
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

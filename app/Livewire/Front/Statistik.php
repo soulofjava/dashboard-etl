@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Cache;
 
 class Statistik extends Component
 {
-    public $selectKecamatan, $selectDesa, $listDesa, $show, $jenis = '', $configId, $data, $jumlah, $totallaki, $totalperem, $cari, $judul, $baris_belum = [], $baris_total = [], $baris_jumlah = [];
+    public $selectKecamatan, $selectDesa, $listDesa, $show, $jenis = '', $configId, $data, $jumlah, $totallaki, $totalperem, $cari, $judul, $baris_belum = [], $baris_total = [], $baris_persen_belum = [];
     public $totalPendudukDesa, $totalKeluargaDesa, $rtmDesa, $bantuanDesa;
     public $firstRun = true;
     protected $listeners = [
@@ -41,17 +41,46 @@ class Statistik extends Component
     {
         $this->jenis = "rentangUmur";
         $this->judul = 'Rentang Umur';
-        $this->data = TwebPenduduk::join('tweb_penduduk_umur', function ($join) {
-            $join->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '>=', 'tweb_penduduk_umur.dari')
-                ->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '<=', 'tweb_penduduk_umur.sampai');
-        })
-            ->where('tweb_penduduk.config_id', '=', $this->configId)
-            ->whereBetween('tweb_penduduk_umur.id', [6, 37])
-            ->groupBy('tweb_penduduk_umur.id', 'tweb_penduduk_umur.nama')
-            ->orderBy('tweb_penduduk_umur.nama', 'asc')
-            ->select('tweb_penduduk_umur.id as id', DB::raw('COALESCE(tweb_penduduk_umur.nama, "Belum Terdata") AS nama'), DB::raw('COUNT(*) as total'))
-            ->get();
-
+        $this->data = DB::select("SELECT u.nama,
+        ((SELECT COUNT(b.id)
+          FROM penduduk_hidup b
+          LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
+          WHERE (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari
+          AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai)) as total,
+        ((SELECT COUNT(b.id)
+          FROM penduduk_hidup b
+          LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
+          WHERE (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari
+          AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai
+          AND b.sex = '1')) as laki,
+        ((SELECT COUNT(b.id)
+          FROM penduduk_hidup b
+          LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
+          WHERE (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari
+          AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai
+          AND b.sex = '2')) as perempuan
+    FROM
+        tweb_penduduk_umur u
+    WHERE
+        u.status = '1'
+         GROUP BY u.id;");
+        $datastring = json_decode(json_encode($this->data), true);
+        $this->jumlah = 0;
+        $this->totallaki = 0;
+        $this->totalperem = 0;
+        //menghitung jumlah
+        foreach ($datastring as $row) {
+            $this->jumlah += $row['total'];
+            $this->totallaki += $row['laki'];
+            $this->totalperem += $row['perempuan'];
+        }
+        foreach ($this->data_jml_semua_penduduk() as $data) {
+            $this->menghitungBarisTotal($data);
+        }
+        //menghitung sisa 
+        foreach ($this->data_jml_semua_penduduk() as $data) {
+            $this->menghitungBarisBelum($data);
+        }
         $this->dispatch('column', data: $this->data);
     }
     public function kategoriUmur()
@@ -353,7 +382,8 @@ class Statistik extends Component
         $this->jenis = "statusKehamilan";
         $this->judul = 'Status Kehamilan';
     }
-    public function data_jml_semua_penduduk(){
+    public function data_jml_semua_penduduk()
+    {
         $semua = DB::select('SELECT 
                 COUNT(k.id) as jumlah,
                 COUNT(CASE WHEN p.sex = 1 THEN p.id END) AS laki,
@@ -361,11 +391,10 @@ class Statistik extends Component
             FROM keluarga_aktif k
             LEFT JOIN tweb_penduduk p ON p.id = k.nik_kepala
             LEFT JOIN tweb_wil_clusterdesa a ON p.id_cluster = a.id;');
-            return $semua;
+        return $semua;
     }
     public function kelasSosial()
     {
-        $this->jenis = "kelasSosial";
         $this->judul = 'kelas Sosial';
         $this->data = DB::select('
                             SELECT u.*, 
@@ -378,7 +407,7 @@ class Statistik extends Component
                     WHERE k.config_id = 1
                     GROUP BY u.id
                     ORDER BY u.id ASC;');
-      
+
         $datastring = json_decode(json_encode($this->data), true);
         $this->jumlah = 0;
         $this->totallaki = 0;
@@ -390,18 +419,33 @@ class Statistik extends Component
             $this->totalperem += $row['perempuan'];
         }
         //menghitung semua total
-        foreach($this->data_jml_semua_penduduk() as $row){
-            $this->baris_total['jumlah'] = $row->jumlah;
-            $this->baris_total['laki'] = $row->laki;
-            $this->baris_total['cewe'] = $row->perempuan;
+        foreach ($this->data_jml_semua_penduduk() as $data) {
+            $this->menghitungBarisTotal($data);
         }
+
         //menghitung sisa 
-        foreach($this->data_jml_semua_penduduk() as $row){
-            $this->baris_belum['jumlah'] = $row->jumlah - $this->jumlah;
-            $this->baris_belum['laki'] = $row->laki - $this->totallaki;
-            $this->baris_belum['cewe'] = $row->perempuan - $this->totalperem;
+        foreach ($this->data_jml_semua_penduduk() as $data) {
+            $this->menghitungBarisBelum($data);
         }
         $this->dispatch('column', data: $this->data);
+    }
+
+    public function menghitungBarisTotal($data)
+    {
+        $this->baris_total['jumlah'] = $data->jumlah;
+        $this->baris_total['laki'] = $data->laki;
+        $this->baris_total['cewe'] = $data->perempuan;
+    }
+
+    public function menghitungBarisBelum($data)
+    {
+        $this->baris_belum['jumlah'] = $data->jumlah - $this->jumlah;
+        $this->baris_belum['laki'] = $data->laki - $this->totallaki;
+        $this->baris_belum['cewe'] = $data->perempuan - $this->totalperem;
+
+        $this->baris_persen_belum['jumlah'] = number_format($this->baris_belum['jumlah'] / $data->jumlah * 100, 2);
+        $this->baris_persen_belum['laki'] = number_format($this->baris_belum['laki'] / $data->jumlah * 100, 2);
+        $this->baris_persen_belum['cewe'] = number_format($this->baris_belum['cewe'] / $data->jumlah * 100, 2);
     }
     public function bantuanPenduduk()
     {
@@ -429,26 +473,14 @@ class Statistik extends Component
         $this->cari = Config::find($this->selectDesa);
         if (isset($this->cari)) {
             $this->show = true;
-            $this->jenis = "rentangUmur";
             $this->configId = $this->cari->id;
         }
-        $this->judul = 'Rentang Umur';
         $this->totalPendudukDesa = TwebPenduduk::where('config_id', '=', $this->configId)->count();
         $this->totalKeluargaDesa = TwebKeluarga::where('config_id', '=', $this->configId)->count();
         $this->rtmDesa = TwebRtm::where('config_id', '=', $this->configId)->count();
         $this->bantuanDesa =  Program::where('config_id', '=', $this->configId)->count();
-        $this->data = TwebPenduduk::join('tweb_penduduk_umur', function ($join) {
-            $join->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '>=', 'tweb_penduduk_umur.dari')
-                ->on(DB::raw('TIMESTAMPDIFF(YEAR, tweb_penduduk.tanggallahir, CURRENT_DATE)'), '<=', 'tweb_penduduk_umur.sampai');
-        })
-            ->where('tweb_penduduk.config_id', '=', $this->configId)
-            ->whereBetween('tweb_penduduk_umur.id', [6, 37])
-            ->groupBy('tweb_penduduk_umur.id', 'tweb_penduduk_umur.nama')
-            ->orderBy('tweb_penduduk_umur.nama', 'asc')
-            ->select('tweb_penduduk_umur.id as id', DB::raw('COALESCE(tweb_penduduk_umur.nama, "Belum Terdata") AS nama'), DB::raw('COUNT(*) as total'))
-            ->get();
 
-        $this->dispatch('column', data: $this->data);
+        $this->kelasSosial();
     }
 
     public function render()
