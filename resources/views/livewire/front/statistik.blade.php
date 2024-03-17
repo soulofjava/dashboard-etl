@@ -600,7 +600,7 @@
                                         <td class="text-right">
                                             {{ $totallakipresen + $baris_persen_belum['laki'] ?? '' }}%
                                         </td>
-                                        <td class="text-right"> {{ $baris_total['cewe'] ?? '' }}</td>
+                                        <td class="text-right"> {{ $baris_total['cewe'] ?? '' }}`</td>
                                         <td class="text-right">
                                             {{ $totalcewepresen + $baris_persen_belum['cewe'] ?? '' }}%
                                         </td>
@@ -622,49 +622,49 @@
                                         </a></h4>
                                     <div class="collapse show mt-1" id="clothing-collapse" style="">
                                         <ul class="btn-toggle-nav list-unstyled ps-2">
-                                            <li><span style="cursor:pointer" wire:click="rentangUmur"
+                                            <li><span style="cursor:pointer" wire:click="statistik(14)"
                                                     class="link-body">Rentang Umur</span></li>
-                                            <li><span style="cursor:pointer" wire:click="kategoriUmur"
+                                            <li><span style="cursor:pointer" wire:click="statistik(15)"
                                                     class="link-body">Kategori Umur</span></li>
-                                            <li><span style="cursor:pointer" wire:click="pendidikanKk"
+                                            <li><span style="cursor:pointer" wire:click="statistik(0)"
                                                     class="link-body">Pendidikan
                                                     Dalam KK</span></li>
                                             {{-- done --}}
-                                            <li><span style="cursor:pointer" wire:click="pendidikanDitempuh"
+                                            <li><span style="cursor:pointer" wire:click="statistik(14)"
                                                     class="link-body">Pendidikan Sedang
                                                     Ditempuh</span></li>
                                             {{-- done --}}
-                                            <li><span style="cursor:pointer" wire:click="pekerjaan"
+                                            <li><span style="cursor:pointer" wire:click="statistik(1)"
                                                     class="link-body">Pekerjaan</span></li>
                                             {{-- done --}}
-                                            <li><span style="cursor:pointer" wire:click="statusPerkawinan"
+                                            <li><span style="cursor:pointer" wire:click="statistik(2)"
                                                     class="link-body">Status Perkawinan</span></li>
                                             {{-- done --}}
-                                            <li><span style="cursor:pointer" wire:click="agama"
+                                            <li><span style="cursor:pointer" wire:click="statistik(3)"
                                                     class="link-body">Agama</span></li>
                                             {{-- done --}}
-                                            <li><span style="cursor:pointer" wire:click="jenisKelamin"
+                                            <li><span style="cursor:pointer" wire:click="statistik(4)"
                                                     class="link-body">Jenis Kelamin</span></li>
                                             {{-- done --}}
-                                            <li><span style="cursor:pointer" wire:click="hubunganKk"
+                                            <li><span style="cursor:pointer" wire:click="statistik(13)"
                                                     class="link-body">Hubungan Dalam KK</span></li>
-                                            <li><span style="cursor:pointer" wire:click="wargaNegara"
+                                            <li><span style="cursor:pointer" wire:click="statistik(5)"
                                                     class="link-body">Warga Negara</span></li>
-                                            <li><span style="cursor:pointer" wire:click="statusPenduduk"
+                                            <li><span style="cursor:pointer" wire:click="statistik(6)"
                                                     class="link-body">Status Penduduk</span></li>
-                                            <li><span style="cursor:pointer" wire:click="golonganDarah"
+                                            <li><span style="cursor:pointer" wire:click="statistik(7)"
                                                     class="link-body">Golongan Darah</span></li>
-                                            <li><span style="cursor:pointer" wire:click="penyandangCacat"
+                                            <li><span style="cursor:pointer" wire:click="statistik(8)"
                                                     class="link-body">Penyandang Cacat</span></li>
-                                            <li><span style="cursor:pointer" wire:click="penyakitMenahun"
+                                            <li><span style="cursor:pointer" wire:click="statistik(9)"
                                                     class="link-body">Penyakit Menahun</span></li>
-                                            <li><span style="cursor:pointer" wire:click="akseptorKB"
+                                            <li><span style="cursor:pointer" wire:click="statistik(11)"
                                                     class="link-body">Akseptor KB</span></li>
-                                            <li><span style="cursor:pointer" wire:click="aktaKelahiran"
+                                            <li><span style="cursor:pointer" wire:click="statistik(16)"
                                                     class="link-body">Akta Kelahiran</span></li>
                                             <li><span style="cursor:pointer" wire:click="kepemilikanKtp"
                                                     class="link-body">Kepemilikan KTP</span></li>
-                                            <li><span style="cursor:pointer" wire:click="asuransiKesehatan"
+                                            <li><span style="cursor:pointer" wire:click="statistik(12)"
                                                     class="link-body">Asuransi Kesehatan</span></li>
                                             <li><span style="cursor:pointer"
                                                     wire:click="statusCovid"class="link-body">Status Covid</span></li>
@@ -686,7 +686,7 @@
                                         </a></h4>
                                     <div class="collapse mt-1" id="keluarga-collapse" style="">
                                         <ul class="btn-toggle-nav list-unstyled ps-2">
-                                            <li><span style="cursor:pointer" wire:click="kelasSosial"
+                                            <li><span style="cursor:pointer" wire:click="statistik(0)"
                                                     class="link-body">Kelas Sosial</span></li>
                                         </ul>
                                     </div>
