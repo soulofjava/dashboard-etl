@@ -662,19 +662,19 @@
                                                     class="link-body">Akseptor KB</span></li>
                                             <li><span style="cursor:pointer" wire:click="statistik(16)"
                                                     class="link-body">Akta Kelahiran</span></li>
-                                            <li><span style="cursor:pointer" wire:click="kepemilikanKtp"
+                                            <li><span style="cursor:pointer" wire:click="statistik(17)"
                                                     class="link-body">Kepemilikan KTP</span></li>
                                             <li><span style="cursor:pointer" wire:click="statistik(12)"
                                                     class="link-body">Asuransi Kesehatan</span></li>
-                                            <li><span style="cursor:pointer"
-                                                    wire:click="statusCovid"class="link-body">Status Covid</span></li>
-                                            <li><span style="cursor:pointer"
-                                                    wire:click="sukuEtnis"class="link-body">Suku / Etnis</span></li>
-                                            <li><span style="cursor:pointer"
-                                                    wire:click="bpjsKetenagakerjaan"class="link-body">BPJS
+                                            <li><span style="cursor:pointer" wire:click="statistik(18)"
+                                                    class="link-body">Status Covid</span></li>
+                                            <li><span style="cursor:pointer" wire:click="statistik(19)"
+                                                    class="link-body">Suku / Etnis</span></li>
+                                            <li><span style="cursor:pointer" wire:click="statistik(20)"
+                                                    class="link-body">BPJS
                                                     Ketenagakerjaan</span></li>
-                                            <li><a span style="cursor:pointer"
-                                                    wire:click="statusKehamilan"class="link-body">Status Kehamilan</a>
+                                            <li><a span style="cursor:pointer" wire:click="statistik(21)"
+                                                    class="link-body">Status Kehamilan</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -699,7 +699,7 @@
                                     <div class="collapse mt-1" id="bantuan-collapse" style="">
                                         <ul class="btn-toggle-nav list-unstyled ps-2">
                                             <li><span style="cursor:pointer"
-                                                    wire:click="bantuanPenduduk"class="link-body">Penerima Bantuan
+                                                    wire:click="statistik(22)"class="link-body">Penerima Bantuan
                                                     Penduduk</span></li>
                                             <li><span style="cursor:pointer" wire:click="bantuanKeluarga"
                                                     class="link-body">Penerima Bantuan Keluarga</span></li>

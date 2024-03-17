@@ -33,6 +33,7 @@ class Statistik extends Component
         $this->selectDesa = "";
     }
 
+
     public function umur($id_referensi, $tabel_referensi, $judul, $select, $where)
     {
         $this->judul = $judul;
@@ -59,6 +60,126 @@ class Statistik extends Component
             u.status = $id_referensi
         GROUP BY u.id;
     ");
+
+        $datastring = json_decode(json_encode($this->data), true);
+        // Calculate totals
+        $this->jumlah = 0;
+        $this->totallaki = 0;
+        $this->totalperem = 0;
+        //menghitung jumlah
+        foreach ($datastring as $row) {
+            $this->jumlah += $row['total'];
+            $this->totallaki += $row['laki'];
+            $this->totalperem += $row['perempuan'];
+        }
+
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisTotal($data);
+        }
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisBelum($data);
+        }
+
+        $this->dispatch('column', data: $this->data);
+    }
+    public function ktp($tabel_referensi, $judul, $select, $where)
+    {
+        $this->judul = $judul;
+        $this->data = DB::select("
+        SELECT 
+            $select,
+            (SELECT COUNT(b.id)
+             FROM penduduk_hidup b
+             LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
+             WHERE $where) as total,
+            (SELECT COUNT(b.id)
+             FROM penduduk_hidup b
+             LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
+             WHERE $where
+             AND b.sex = '1') as laki,
+            (SELECT COUNT(b.id)
+             FROM penduduk_hidup b
+             LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
+             WHERE $where
+             AND b.sex = '2') as perempuan
+        FROM
+            $tabel_referensi u
+        GROUP BY u.id;
+    ");
+
+        $datastring = json_decode(json_encode($this->data), true);
+        // Calculate totals
+        $this->jumlah = 0;
+        $this->totallaki = 0;
+        $this->totalperem = 0;
+        //menghitung jumlah
+        foreach ($datastring as $row) {
+            $this->jumlah += $row['total'];
+            $this->totallaki += $row['laki'];
+            $this->totalperem += $row['perempuan'];
+        }
+
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisTotal($data);
+        }
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisBelum($data);
+        }
+
+        $this->dispatch('column', data: $this->data);
+    }
+    public function covid($tabel_referensi, $judul)
+    {
+        $this->judul = $judul;
+        $this->data = DB::select("
+        SELECT 
+        u.*, COUNT(k.id) as total,
+        COUNT(CASE WHEN k.status_covid = u.id AND p.sex = 1 THEN k.id_terdata END) AS laki,
+        COUNT(CASE WHEN k.status_covid = u.id AND p.sex = 2 THEN k.id_terdata END) AS perempuan
+        FROM $tabel_referensi u
+        LEFT JOIN covid19_pemudik k ON k.status_covid = u.id AND k.config_id = {$this->configId}
+        LEFT JOIN tweb_penduduk p ON p.id=k.id_terdata
+        GROUP BY u.id;");
+
+        $datastring = json_decode(json_encode($this->data), true);
+        // Calculate totals
+        $this->jumlah = 0;
+        $this->totallaki = 0;
+        $this->totalperem = 0;
+        //menghitung jumlah
+        foreach ($datastring as $row) {
+            $this->jumlah += $row['total'];
+            $this->totallaki += $row['laki'];
+            $this->totalperem += $row['perempuan'];
+        }
+
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisTotal($data);
+        }
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisBelum($data);
+        }
+
+        $this->dispatch('column', data: $this->data);
+    }
+    public function suku($judul)
+    {
+        $this->judul = $judul;
+        $this->data = DB::select("
+        SELECT u.suku AS id,
+            u.suku AS nama,  
+            COUNT(u.sex) AS total,
+            COUNT(CASE WHEN u.sex = 1 THEN 1 END) AS laki,
+            COUNT(CASE WHEN u.sex = 2 THEN 1 END) AS perempuan
+        FROM 
+            penduduk_hidup u
+        LEFT JOIN 
+            tweb_wil_clusterdesa a ON u.id_cluster = a.id
+        WHERE 
+            u.suku IS NOT NULL AND u.suku != ''
+        GROUP BY 
+            u.suku;
+        ;");
 
         $datastring = json_decode(json_encode($this->data), true);
         // Calculate totals
@@ -224,31 +345,84 @@ class Statistik extends Component
             '14'    => ['id_referensi' => '1', 'tabel_referensi' => 'tweb_penduduk_umur', 'judul' => 'Rentang Umur'],
             '15'    => ['id_referensi' => '0', 'tabel_referensi' => 'tweb_penduduk_umur', 'judul' => 'Kategori Umur'],
             '16'    => ['id_referensi' => '1', 'tabel_referensi' => 'tweb_penduduk_umur', 'judul' => 'Akta Kelahiran'],
+            '17'    => ['id_referensi' => '', 'tabel_referensi' => 'tweb_status_ktp', 'judul' => 'Kepemilikan KTP'],
+            '18'    => ['id_referensi' => '', 'tabel_referensi' => 'ref_status_covid', 'judul' => 'Status Covid'],
+            '19'    => ['id_referensi' => '', 'tabel_referensi' => '', 'judul' => 'SUKU / ETNIS'],
+            '20'    => ['id_referensi' => 'pekerjaan_id', 'tabel_referensi' => 'tweb_penduduk_pekerjaan', 'judul' => 'BPJS Ketenagakerjaan'],
+            '21'    => ['id_referensi' => 'hamil', 'tabel_referensi' => 'ref_penduduk_hamil', 'judul' => 'Status Kehamilan'],
+            '22'    => ['id_referensi' => '', 'tabel_referensi' => 'program', 'judul' => 'Bantuan Penduduk'],
+
         ];
 
         if (array_key_exists($id, $statistik_penduduk)) {
-            // Perform action based on $id
             if ($id == 14) {
                 $select = "u.*";
-                $where = "(DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai";
+                $where = "(DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai AND b.config_id = {$this->configId}";
                 $this->umur($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $select, $where);
             } else if ($id == 15) {
                 $select = "u.*, concat(u.nama, ' (', u.dari, ' - ', u.sampai, ')') as nama";
-                $where = "(DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai";
+                $where = "(DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai AND b.config_id = {$this->configId}";
                 $this->umur($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $select, $where);
             } else if ($id == 16) {
                 $select = "u.*, concat('UMUR ', u.dari, ' S/D ', u.sampai, ' TAHUN') as nama";
-                $where = "(DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai AND akta_lahir <> ''";
+                $where = "(DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai AND akta_lahir <> '' AND b.config_id = {$this->configId}";
                 $this->umur($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $select, $where);
+            } else if ($id == 17) {
+                $select = "u.*";
+                $where = "((DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0)>=17 OR (status_kawin IS NOT NULL AND status_kawin <> 1)) AND u.status_rekam = status_rekam AND b.config_id = {$this->configId}";
+                $this->ktp($statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $select, $where);
+            } else if ($id == 18) {
+                $this->covid($statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul']);
+            } else if ($id == 19) {
+                $this->suku($statistik_penduduk[$id]['judul']);
+            } else if ($id == 20) {
+                $where = "p.bpjs_ketenagakerjaan IS NOT NULL AND p.bpjs_ketenagakerjaan != ''";
+                $this->select_jml_penduduk_per_kategori_costum($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $where);
+            } else if ($id == 21) {
+                $where = "p.sex = 2";
+                $this->select_jml_penduduk_per_kategori_costum($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $where);
+            } else if ($id == 22) {
+                $where = "(u.config_id = {$this->configId} OR u.config_id IS NULL)";
+                $this->bantuan($statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $where);
             } else {
                 $this->select_jml_penduduk_per_kategori($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul']);
             }
         } else {
-            // Default action if $id is not found in $statistik_penduduk
             $this->kelasSosial();
         }
     }
 
+    public function bantuan($tabel_referensi, $judul, $where)
+    {
+        $this->judul = $judul;
+        $this->data = DB::select("SELECT 
+        u.*,
+        (SELECT COUNT(kartu_nik) FROM program_peserta k WHERE k.program_id = u.id AND k.config_id = u.config_id) AS total,
+        (SELECT COUNT(k.kartu_nik) FROM program_peserta k INNER JOIN tweb_penduduk p ON k.kartu_nik = p.nik WHERE k.program_id = u.id AND p.sex = 1 AND k.config_id = u.config_id) AS laki,
+        (SELECT COUNT(k.kartu_nik) FROM program_peserta k INNER JOIN tweb_penduduk p ON k.kartu_nik = p.nik WHERE k.program_id = u.id AND p.sex = 2 AND k.config_id = u.config_id) AS perempuan
+    FROM 
+        $tabel_referensi u 
+    WHERE 
+        $where");
+        $datastring = json_decode(json_encode($this->data), true);
+        $this->jumlah = 0;
+        $this->totallaki = 0;
+        $this->totalperem = 0;
+        //menghitung jumlah
+        foreach ($datastring as $row) {
+            $this->jumlah += $row['total'];
+            $this->totallaki += $row['laki'];
+            $this->totalperem += $row['perempuan'];
+        }
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisTotal($data);
+        }
+        //menghitung sisa 
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisBelum($data);
+        }
+        $this->dispatch('column', data: $this->data);
+    }
     public function select_jml_penduduk_per_kategori($id_referensi, $tabel_referensi, $judul)
     {
         $this->judul = $judul;
@@ -260,7 +434,7 @@ class Statistik extends Component
                         FROM 
                             $tabel_referensi u
                         LEFT JOIN 
-                            penduduk_hidup p ON u.id = p.$id_referensi AND p.config_id = 1
+                            penduduk_hidup p ON u.id = p.$id_referensi AND p.config_id = $this->configId
                         LEFT JOIN 
                             tweb_wil_clusterdesa a ON p.id_cluster = a.id
                         GROUP BY 
@@ -279,6 +453,43 @@ class Statistik extends Component
             $this->menghitungBarisTotal($data);
         }
         //menghitung sisa 
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisBelum($data);
+        }
+        $this->dispatch('column', data: $this->data);
+    }
+    public function select_jml_penduduk_per_kategori_costum($id_referensi, $tabel_referensi, $judul, $where)
+    {
+        $this->judul = $judul;
+        $this->data = DB::select("
+        SELECT 
+            u.*,
+            COUNT(p.id) AS total,
+            COUNT(CASE WHEN p.sex = 1 THEN p.id END) AS laki,
+            COUNT(CASE WHEN p.sex = 2 THEN p.id END) AS perempuan
+        FROM 
+            $tabel_referensi u
+        LEFT JOIN 
+            penduduk_hidup p ON u.id = p.$id_referensi AND p.config_id = $this->configId
+        LEFT JOIN 
+            tweb_wil_clusterdesa a ON p.id_cluster = a.id
+        WHERE 
+            $where
+        GROUP BY 
+            u.id
+    ");
+        $datastring = json_decode(json_encode($this->data), true);
+        $this->jumlah = 0;
+        $this->totallaki = 0;
+        $this->totalperem = 0;
+        foreach ($datastring as $row) {
+            $this->jumlah += $row['total'];
+            $this->totallaki += $row['laki'];
+            $this->totalperem += $row['perempuan'];
+        }
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisTotal($data);
+        }
         foreach ($this->data_jml_penduduk_hidup() as $data) {
             $this->menghitungBarisBelum($data);
         }
