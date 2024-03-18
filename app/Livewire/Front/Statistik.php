@@ -222,6 +222,18 @@ class Statistik extends Component
         WHERE `tweb_penduduk`.`status_dasar` = 1;');
         return $semua;
     }
+    public function data_jml_semua_keluarga(){
+        return DB::select("SELECT 
+        COUNT(k.id) AS jumlah,
+        COUNT(CASE WHEN p.sex = 1 THEN p.id END) AS laki,
+        COUNT(CASE WHEN p.sex = 2 THEN p.id END) AS perempuan
+    FROM 
+        keluarga_aktif k
+    LEFT JOIN 
+        tweb_penduduk p ON p.id = k.nik_kepala
+    LEFT JOIN 
+        tweb_wil_clusterdesa a ON p.id_cluster = a.id;");
+    }
     public function kelasSosial()
     {
         $this->judul = 'kelas Sosial';
@@ -244,12 +256,10 @@ class Statistik extends Component
             $this->totallaki += $row['laki'];
             $this->totalperem += $row['perempuan'];
         }
-        //menghitung semua total
+        
         foreach ($this->data_jml_semua_penduduk() as $data) {
             $this->menghitungBarisTotal($data);
         }
-
-        //menghitung sisa 
         foreach ($this->data_jml_semua_penduduk() as $data) {
             $this->menghitungBarisBelum($data);
         }
@@ -334,8 +344,8 @@ class Statistik extends Component
             '19'    => ['id_referensi' => '', 'tabel_referensi' => '', 'judul' => 'SUKU / ETNIS'],
             '20'    => ['id_referensi' => 'pekerjaan_id', 'tabel_referensi' => 'tweb_penduduk_pekerjaan', 'judul' => 'BPJS Ketenagakerjaan'],
             '21'    => ['id_referensi' => 'hamil', 'tabel_referensi' => 'ref_penduduk_hamil', 'judul' => 'Status Kehamilan'],
-            '22'    => ['id_referensi' => '', 'tabel_referensi' => 'program', 'judul' => 'Bantuan Penduduk'],
-            '23'    => ['id_referensi' => '', 'tabel_referensi' => 'program', 'judul' => 'Bantuan Keluarga'],
+            '22'    => ['id_referensi' => '1', 'tabel_referensi' => 'program', 'judul' => 'Bantuan Penduduk'],
+            '23'    => ['id_referensi' => '2', 'tabel_referensi' => 'program', 'judul' => 'Bantuan Keluarga'],
 
         ];
 
@@ -368,8 +378,11 @@ class Statistik extends Component
                 $this->select_jml_penduduk_per_kategori_costum($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $where);
             } else if ($id == 22) {
                 $where = "u.sasaran = '1' AND (u.config_id = {$this->configId} OR u.config_id IS NULL)";
-                $this->bantuan($statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $where);
-            } else {
+                $this->bantuan($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $where);
+            } else if ($id == 23) {
+                $where = "u.sasaran = '2' AND (u.config_id = {$this->configId} OR u.config_id IS NULL)";
+                $this->bantuan($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $where);
+            }else {
                 $this->select_jml_penduduk_per_kategori($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul']);
             }
         } else {
@@ -377,7 +390,7 @@ class Statistik extends Component
         }
     }
 
-    public function bantuan($tabel_referensi, $judul, $where)
+    public function bantuan($id_referensi, $tabel_referensi, $judul, $where)
     {
         $this->judul = $judul;
         $this->judul_jumlah = "PENERIMA";
@@ -401,20 +414,28 @@ class Statistik extends Component
                             $where
                         GROUP BY 
                             u.id;");
-        $datastring = json_decode(json_encode($this->data), true);
        
-        $this->jumlah_penerima();
-        foreach ($this->data_jml_penduduk_hidup() as $data) {
+        $this->hitung_total($id_referensi);
+
+        if($id_referensi == '1'){
+            foreach ($this->data_jml_penduduk_hidup() as $data) {
+                $this->menghitungBarisTotal($data);
+            }
+            foreach ($this->data_jml_penduduk_hidup() as $data) {
+                $this->menghitungBarisBelum($data);
+            }
+        }else{
+            foreach ($this->data_jml_semua_keluarga() as $data) {
             $this->menghitungBarisTotal($data);
-        }
-        //menghitung sisa 
-        foreach ($this->data_jml_penduduk_hidup() as $data) {
-            $this->menghitungBarisBelum($data);
+            }
+            foreach ($this->data_jml_semua_keluarga() as $data) {
+                $this->menghitungBarisBelum($data);
+            }
         }
         $this->dispatch('column', data: $this->data);
     }
 
-    public function jumlah_penerima(){
+    public function hitung_total($id_referensi){
         $jumlah = DB::select("SELECT 
             COUNT(DISTINCT pp.peserta) AS jumlah,
             COUNT(DISTINCT CASE WHEN p.sex = 1 THEN p.id END) AS laki,
@@ -431,8 +452,8 @@ class Statistik extends Component
         LEFT JOIN 
             tweb_wil_clusterdesa a ON p.id_cluster = a.id
         WHERE 
-            u.sasaran = '1'
-            AND (u.config_id = 1 OR u.config_id IS NULL);");
+            u.sasaran = $id_referensi
+            AND (u.config_id = {$this->configId} OR u.config_id IS NULL);");
         $datastring = json_decode(json_encode($jumlah), true);
         foreach ($datastring as $row) {
                 $this->jumlah = $row['jumlah'];
