@@ -572,7 +572,7 @@
                                         @endphp
                                     @endforeach
                                     <tr>
-                                        <td colspan="2" class="text-center font-weight-bold">jumlah</td>
+                                        <td colspan="2" class="font-weight-bold">{{ $judul_jumlah }}</td>
                                         <td class="text-right"> {{ $jumlah ?? '' }}</td>
                                         <td class="text-right">{{ $totalpresentasi ?? '' }} %</td>
                                         <td class="text-right"> {{ $totallaki ?? '' }}</td>
@@ -581,7 +581,7 @@
                                         <td class="text-right">{{ $totalcewepresen ?? '' }} %</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2" class="text-center font-weight-bold">Belum Mengisi</td>
+                                        <td colspan="2" class="font-weight-bold">{{ $judul_belum }}</td>
                                         <td class="text-right"> {{ $baris_belum['jumlah'] ?? '' }}</td>
                                         <td class="text-right">{{ $baris_persen_belum['jumlah'] ?? '' }} %</td>
                                         <td class="text-right"> {{ $baris_belum['laki'] ?? '' }}</td>
@@ -590,7 +590,7 @@
                                         <td class="text-right">{{ $baris_persen_belum['cewe'] ?? '' }} %</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2" class="text-center font-weight-bold">Total</td>
+                                        <td colspan="2" class="font-weight-bold">Total</td>
                                         <td class="text-right"> {{ $baris_total['jumlah'] ?? '' }}</td>
                                         <td class="text-right">
                                             {{ $totalpresentasi + $baris_persen_belum['jumlah'] ?? '' }}

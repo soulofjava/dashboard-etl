@@ -18,7 +18,8 @@ use Illuminate\Support\Facades\Cache;
 
 class Statistik extends Component
 {
-    public $selectKecamatan, $selectDesa, $listDesa, $show, $jenis = '', $configId, $data, $jumlah, $totallaki, $totalperem, $cari, $judul, $baris_belum = [], $baris_total = [], $baris_persen_belum = [];
+    public $selectKecamatan, $selectDesa, $listDesa, $show, $jenis = '', $configId, $data, $jumlah = 0, $totallaki = 0, $totalperem = 0, $cari, $judul;
+    public $baris_belum = [], $baris_total = [], $baris_persen_belum = [], $judul_jumlah = 'JUMLAH', $judul_belum  = 'BELUM MENGISI';
     public $totalPendudukDesa, $totalKeluargaDesa, $rtmDesa, $bantuanDesa;
     public $firstRun = true;
     protected $listeners = [
@@ -63,9 +64,7 @@ class Statistik extends Component
 
         $datastring = json_decode(json_encode($this->data), true);
         // Calculate totals
-        $this->jumlah = 0;
-        $this->totallaki = 0;
-        $this->totalperem = 0;
+       
         //menghitung jumlah
         foreach ($datastring as $row) {
             $this->jumlah += $row['total'];
@@ -108,11 +107,7 @@ class Statistik extends Component
     ");
 
         $datastring = json_decode(json_encode($this->data), true);
-        // Calculate totals
-        $this->jumlah = 0;
-        $this->totallaki = 0;
-        $this->totalperem = 0;
-        //menghitung jumlah
+       
         foreach ($datastring as $row) {
             $this->jumlah += $row['total'];
             $this->totallaki += $row['laki'];
@@ -142,11 +137,7 @@ class Statistik extends Component
         GROUP BY u.id;");
 
         $datastring = json_decode(json_encode($this->data), true);
-        // Calculate totals
-        $this->jumlah = 0;
-        $this->totallaki = 0;
-        $this->totalperem = 0;
-        //menghitung jumlah
+      
         foreach ($datastring as $row) {
             $this->jumlah += $row['total'];
             $this->totallaki += $row['laki'];
@@ -182,11 +173,7 @@ class Statistik extends Component
         ;");
 
         $datastring = json_decode(json_encode($this->data), true);
-        // Calculate totals
-        $this->jumlah = 0;
-        $this->totallaki = 0;
-        $this->totalperem = 0;
-        //menghitung jumlah
+     
         foreach ($datastring as $row) {
             $this->jumlah += $row['total'];
             $this->totallaki += $row['laki'];
@@ -251,10 +238,7 @@ class Statistik extends Component
                     ORDER BY u.id ASC;');
 
         $datastring = json_decode(json_encode($this->data), true);
-        $this->jumlah = 0;
-        $this->totallaki = 0;
-        $this->totalperem = 0;
-        //menghitung jumlah
+      
         foreach ($datastring as $row) {
             $this->jumlah += $row['total'];
             $this->totallaki += $row['laki'];
@@ -351,6 +335,7 @@ class Statistik extends Component
             '20'    => ['id_referensi' => 'pekerjaan_id', 'tabel_referensi' => 'tweb_penduduk_pekerjaan', 'judul' => 'BPJS Ketenagakerjaan'],
             '21'    => ['id_referensi' => 'hamil', 'tabel_referensi' => 'ref_penduduk_hamil', 'judul' => 'Status Kehamilan'],
             '22'    => ['id_referensi' => '', 'tabel_referensi' => 'program', 'judul' => 'Bantuan Penduduk'],
+            '23'    => ['id_referensi' => '', 'tabel_referensi' => 'program', 'judul' => 'Bantuan Keluarga'],
 
         ];
 
@@ -382,7 +367,7 @@ class Statistik extends Component
                 $where = "p.sex = 2";
                 $this->select_jml_penduduk_per_kategori_costum($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $where);
             } else if ($id == 22) {
-                $where = "(u.config_id = {$this->configId} OR u.config_id IS NULL)";
+                $where = "u.sasaran = '1' AND (u.config_id = {$this->configId} OR u.config_id IS NULL)";
                 $this->bantuan($statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $where);
             } else {
                 $this->select_jml_penduduk_per_kategori($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul']);
@@ -395,25 +380,30 @@ class Statistik extends Component
     public function bantuan($tabel_referensi, $judul, $where)
     {
         $this->judul = $judul;
+        $this->judul_jumlah = "PENERIMA";
+        $this->judul_belum = "BUKAN PENERIMA";
         $this->data = DB::select("SELECT 
-        u.*,
-        (SELECT COUNT(kartu_nik) FROM program_peserta k WHERE k.program_id = u.id AND k.config_id = u.config_id) AS total,
-        (SELECT COUNT(k.kartu_nik) FROM program_peserta k INNER JOIN tweb_penduduk p ON k.kartu_nik = p.nik WHERE k.program_id = u.id AND p.sex = 1 AND k.config_id = u.config_id) AS laki,
-        (SELECT COUNT(k.kartu_nik) FROM program_peserta k INNER JOIN tweb_penduduk p ON k.kartu_nik = p.nik WHERE k.program_id = u.id AND p.sex = 2 AND k.config_id = u.config_id) AS perempuan
-    FROM 
-        $tabel_referensi u 
-    WHERE 
-        $where");
+                            u.id, 
+                            u.nama, 
+                            u.*, 
+                            COUNT(pp.peserta) AS total,
+                            COUNT(CASE WHEN p.sex = 1 THEN p.id END) AS laki,
+                            COUNT(CASE WHEN p.sex = 2 THEN p.id END) AS perempuan
+                        FROM 
+                            $tabel_referensi u
+                        LEFT JOIN 
+                            program_peserta pp ON pp.program_id = u.id
+                        LEFT JOIN 
+                            tweb_penduduk p ON pp.peserta = p.nik
+                        LEFT JOIN 
+                            tweb_wil_clusterdesa a ON p.id_cluster = a.id
+                        WHERE 
+                            $where
+                        GROUP BY 
+                            u.id;");
         $datastring = json_decode(json_encode($this->data), true);
-        $this->jumlah = 0;
-        $this->totallaki = 0;
-        $this->totalperem = 0;
-        //menghitung jumlah
-        foreach ($datastring as $row) {
-            $this->jumlah += $row['total'];
-            $this->totallaki += $row['laki'];
-            $this->totalperem += $row['perempuan'];
-        }
+       
+        $this->jumlah_penerima();
         foreach ($this->data_jml_penduduk_hidup() as $data) {
             $this->menghitungBarisTotal($data);
         }
@@ -422,6 +412,33 @@ class Statistik extends Component
             $this->menghitungBarisBelum($data);
         }
         $this->dispatch('column', data: $this->data);
+    }
+
+    public function jumlah_penerima(){
+        $jumlah = DB::select("SELECT 
+            COUNT(DISTINCT pp.peserta) AS jumlah,
+            COUNT(DISTINCT CASE WHEN p.sex = 1 THEN p.id END) AS laki,
+            COUNT(DISTINCT CASE WHEN p.sex = 2 THEN p.id END) AS perempuan,
+            COUNT(DISTINCT CASE WHEN p.status_dasar <> 1 THEN p.id END) AS jumlah_nonaktif,
+            COUNT(DISTINCT CASE WHEN p.status_dasar <> 1 AND p.sex = 1 THEN p.id END) AS jumlah_nonaktif_laki,
+            COUNT(DISTINCT CASE WHEN p.status_dasar <> 1 AND p.sex = 2 THEN p.id END) AS jumlah_nonaktif_perempuan
+        FROM 
+            program u
+        LEFT JOIN 
+            program_peserta pp ON pp.program_id = u.id
+        LEFT JOIN 
+            tweb_penduduk p ON pp.peserta = p.nik
+        LEFT JOIN 
+            tweb_wil_clusterdesa a ON p.id_cluster = a.id
+        WHERE 
+            u.sasaran = '1'
+            AND (u.config_id = 1 OR u.config_id IS NULL);");
+        $datastring = json_decode(json_encode($jumlah), true);
+        foreach ($datastring as $row) {
+                $this->jumlah = $row['jumlah'];
+                $this->totallaki = $row['laki'];
+                $this->totalperem = $row['perempuan'];
+        }
     }
     public function select_jml_penduduk_per_kategori($id_referensi, $tabel_referensi, $judul)
     {
@@ -440,10 +457,7 @@ class Statistik extends Component
                         GROUP BY 
                             u.id");
         $datastring = json_decode(json_encode($this->data), true);
-        $this->jumlah = 0;
-        $this->totallaki = 0;
-        $this->totalperem = 0;
-        //menghitung jumlah
+      
         foreach ($datastring as $row) {
             $this->jumlah += $row['total'];
             $this->totallaki += $row['laki'];
@@ -479,9 +493,7 @@ class Statistik extends Component
             u.id
     ");
         $datastring = json_decode(json_encode($this->data), true);
-        $this->jumlah = 0;
-        $this->totallaki = 0;
-        $this->totalperem = 0;
+      
         foreach ($datastring as $row) {
             $this->jumlah += $row['total'];
             $this->totallaki += $row['laki'];
