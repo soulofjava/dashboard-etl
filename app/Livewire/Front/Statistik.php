@@ -15,13 +15,15 @@ use Asantibanez\LivewireCharts\Models\PieChartModel;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\Support\Facades\Cache;
+use Livewire\WithPagination;
 
 class Statistik extends Component
 {
     public $selectKecamatan, $selectDesa, $listDesa, $show, $jenis = '', $configId, $data, $jumlah = 0, $totallaki = 0, $totalperem = 0, $cari, $judul;
     public $baris_belum = [], $baris_total = [], $baris_persen_belum = [], $judul_jumlah = 'JUMLAH', $judul_belum  = 'BELUM MENGISI';
-    public $totalPendudukDesa, $totalKeluargaDesa, $rtmDesa, $bantuanDesa;
+    public $totalPendudukDesa, $totalKeluargaDesa, $rtmDesa, $bantuanDesa, $daftar_penerima;
     public $firstRun = true;
+    use WithPagination;
     protected $listeners = [
         'onPointClick' => 'handleOnPointClick',
         'onSliceClick' => 'handleOnSliceClick',
@@ -283,21 +285,7 @@ class Statistik extends Component
         $this->baris_persen_belum['laki'] = number_format($this->baris_belum['laki'] / $data->jumlah * 100, 2);
         $this->baris_persen_belum['cewe'] = number_format($this->baris_belum['cewe'] / $data->jumlah * 100, 2);
     }
-    public function bantuanPenduduk()
-    {
-        $this->jenis = "bantuanPenduduk";
-        $this->judul = 'Bantuan Penduduk';
-    }
-    public function bantuanKeluarga()
-    {
-        $this->jenis = "bantuanKeluarga";
-        $this->judul = 'Bantuan Keluarga';
-    }
-    public function rtm()
-    {
-        $this->jenis = "rtm";
-        $this->judul = 'RTM';
-    }
+   
     public function tampilkan()
     {
         $rules = [
@@ -346,6 +334,7 @@ class Statistik extends Component
             '21'    => ['id_referensi' => 'hamil', 'tabel_referensi' => 'ref_penduduk_hamil', 'judul' => 'Status Kehamilan'],
             '22'    => ['id_referensi' => '1', 'tabel_referensi' => 'program', 'judul' => 'Bantuan Penduduk'],
             '23'    => ['id_referensi' => '2', 'tabel_referensi' => 'program', 'judul' => 'Bantuan Keluarga'],
+            '24'    => ['id_referensi' => '2', 'tabel_referensi' => 'program', 'judul' => 'RTM'],
 
         ];
 
@@ -433,8 +422,24 @@ class Statistik extends Component
             }
         }
         $this->dispatch('column', data: $this->data);
+        $this->penerima($tabel_referensi, $where);
     }
 
+    public function penerima($tabel_referensi, $where){
+        $this->daftar_penerima = DB::select("SELECT u.id, u.nama AS program, p.nama AS nama_peserta, a.dusun, a.rt, a.rw
+        FROM 
+            $tabel_referensi u
+        LEFT JOIN 
+            program_peserta pp ON pp.program_id = u.id
+        LEFT JOIN 
+            tweb_penduduk p ON pp.peserta = p.nik
+        LEFT JOIN 
+            tweb_wil_clusterdesa a ON p.id_cluster = a.id
+        WHERE 
+            $where");
+        $daftar_penerima_array = json_decode(json_encode($this->daftar_penerima), true);
+        $this->dispatch('penerima', data:$daftar_penerima_array);
+    }
     public function hitung_total($id_referensi){
         $jumlah = DB::select("SELECT 
             COUNT(DISTINCT pp.peserta) AS jumlah,

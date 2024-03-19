@@ -210,6 +210,10 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            @if($daftar_penerima)
+                            <table id="example" class="display" style="width:100%">
+                            </table>
+                            @endif
                         @else
                             <p>tidak ada data</p>
                         @endif
@@ -345,12 +349,45 @@
     <script src="{{ asset('costum/js/columnchart.js') }}"></script>
     <script src="{{ asset('fusioncharts/fusioncharts.js') }}"></script>
     <script src="{{ asset('fusioncharts/themes/fusioncharts.theme.ocean.js') }}"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
     <script>
-       	
-new DataTable('table.display');
+      document.addEventListener('livewire:init', function() {
+            window.addEventListener('penerima', event => {
+                $(document).ready(function() {
+                    const penerima = event.detail.data;
+                    var dataSource = [];
+                    penerima.forEach(dataItem => {
+                        let alamat = '';
+                        if (dataItem.rt) {
+                            alamat += 'RT ' + dataItem.rt + ' ';
+                        }
+                        if (dataItem.rw) {
+                            alamat += 'RW ' + dataItem.rw + ' ';
+                        }
+                        if (dataItem.dusun) {
+                            alamat += 'DUSUN ' + dataItem.dusun;
+                        }
+                        dataSource.push([
+                            dataItem.program,
+                            dataItem.nama_peserta,
+                            alamat 
+                        ]);
+                    });
+                    new DataTable('#example', {
+                        columns: [
+                            { title: 'Program' },
+                            { title: 'Penerima' },
+                            { title: 'Alamat' },
+                        ],
+                        data: dataSource
+                    });
+                }); 
+            });
+        });
 
+      
         document.addEventListener('livewire:init', function() {
             window.addEventListener('column', event => {
                 var dataArray = event.detail.data;
