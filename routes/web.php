@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\File;
 Route::get('/', Home::class)->name('home');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('back.pages.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
