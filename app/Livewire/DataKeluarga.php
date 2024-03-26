@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class DataKeluarga extends Component
 {
-    public $kecamatan, $desa;
+    public $kecamatan,$id_kecamatan, $desa, $selectedOption;
 
     public function mount()
     {
@@ -16,16 +16,16 @@ class DataKeluarga extends Component
         $this->desa = [];
     }
 
-    // public function cariDesa($selectedKecamatan)
-    // {
-    //     $this->$selectedKecamatan = 'asd';
-    //     // if (!empty($this->kecamatan)) {
-    //     //     foreach ($this->kecamatan as $kecamatan) {
-    //     //         $desaKecamatan = Config::where('nama_kecamatan', $kecamatan)->distinct('nama_desa')->pluck('nama_desa', 'nama_desa')->toArray();
-    //     //         $this->desa[$kecamatan] = $desaKecamatan;
-    //     //     }
-    //     // }
-    // }
+    public function updatedSelectedOption($value)
+    {
+        $this->desa = 'asd';
+        // if (!empty($this->kecamatan)) {
+        //     foreach ($this->kecamatan as $kecamatan) {
+        //         $desaKecamatan = Config::where('nama_kecamatan', $kecamatan)->distinct('nama_desa')->pluck('nama_desa', 'nama_desa')->toArray();
+        //         $this->desa[$kecamatan] = $desaKecamatan;
+        //     }
+        // }
+    }
 
     public function render()
     {
