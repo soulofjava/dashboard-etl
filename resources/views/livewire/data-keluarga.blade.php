@@ -10,10 +10,9 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 {!! Form::select('kecamatan', $kecamatan, null,['placeholder' => 'Silahkan Pilih
-                                Kecamatan', 'class'=>'default-select form-control wide mb-3']); !!}
+                                Kecamatan', 'class'=>'default-select form-control wide mb-3' ,'wire:change' =>
+                                'optionChanged','wire:model' => 'kecamatan']); !!}
                             </div>
-                            @dump($selectedKecamatan)
-                            @dump($kecamatan)
                             <div class="col-lg-6">
                                 {!! Form::select('desa', $desa, null,['placeholder' => 'Silahkan Pilih Desa',
                                 'class'=>'default-select form-control wide mb-3']); !!}
