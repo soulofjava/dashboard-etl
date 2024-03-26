@@ -8,14 +8,15 @@
     <meta name="author" content="" />
     <meta name="robots" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Dompet : Payment Admin Template" />
-    <meta property="og:title" content="Dompet : Payment Admin Template" />
-    <meta property="og:description" content="Dompet : Payment Admin Template" />
+    <meta name="description" content="Admin - Dashboard ETL" />
+    <meta property="og:title" content="Admin - Dashboard ETL" />
+    <meta property="og:description" content="Admin - Dashboard ETL" />
     <meta property="og:image" content="https://dompet.dexignlab.com/xhtml/social-image.png" />
     <meta name="format-detection" content="telephone=no">
 
+
     <!-- PAGE TITLE HERE -->
-    <title>Dompet : Payment Admin Template</title>
+    <title>Admin - Dashboard ETL</title>
 
     <!-- FAVICONS ICON -->
     <link rel="shortcut icon" type="image/png" href="{{ asset('assets/images/favicon.png') }}" />
@@ -32,22 +33,22 @@
                         <div class="row no-gutters">
                             <div class="col-xl-12">
                                 <div class="auth-form">
-                                    <div class="text-center mb-3">
+                                    <!-- <div class="text-center mb-3">
                                         <a href="index.html"><img src="{{ asset('assets/images/logo-full.png') }}"
                                                 alt=""></a>
                                     </div>
-                                    <h4 class="text-center mb-4">Sign in your account</h4>
+                                    <h4 class="text-center mb-4">Sign in your account</h4> -->
                                     <form method="POST" action="{{ route('login') }}">
                                         @csrf
                                         <div class="mb-3">
                                             <label class="mb-1"><strong>Email</strong></label>
                                             <input type="email" class="form-control" name="email"
-                                                value="hello@example.com">
+                                                placeholder="hello@example.com" autofocus>
                                         </div>
                                         <div class="mb-3">
                                             <label class="mb-1"><strong>Password</strong></label>
                                             <input type="password" class="form-control" name="password"
-                                                value="Password">
+                                                placeholder="Password">
                                         </div>
                                         <!-- <div class="row d-flex justify-content-between mt-4 mb-2">
                                             <div class="mb-3">
