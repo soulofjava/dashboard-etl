@@ -25,6 +25,7 @@ class DataKeluarga extends Component
         $this->desTerpilih = [];
         $this->idConfig = [];
         $this->dusTerpilih = [];
+        $this->dusun = [];
     }
 
     public function updatedDesTerpilih($value)
@@ -39,10 +40,11 @@ class DataKeluarga extends Component
     {
         return view('livewire.data-keluarga', [
             'penduduk' => TwebPenduduk::with('alamate')
-            ->join('tweb_wil_clusterdesa', 'tweb_penduduk.config_id', '=', 'tweb_wil_clusterdesa.config_id')
-            ->where('tweb_penduduk.config_id', $this->idConfig)
-            ->where('tweb_wil_clusterdesa.dusun', $this->dusTerpilih)
-            ->paginate(10)
+                ->whereHas('alamate', function ($isa) {
+                    $isa->where('dusun', $this->dusTerpilih);
+                })
+                ->where('tweb_penduduk.config_id', $this->idConfig)
+                ->paginate(10)
         ]);
     }
 }
