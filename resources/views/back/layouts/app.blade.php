@@ -7,8 +7,11 @@
     <!-- PAGE TITLE HERE -->
     <title>Admin - Dashboard ETL</title>
 
-    @stack('before-style') @include('back.includes.style')
-    @stack('after-style') @vite([]) @livewireStyles
+    @stack('before-style')
+    @include('back.includes.style')
+    @stack('after-style')
+    @vite([])
+    @livewireStyles
 </head>
 
 <body>
@@ -35,15 +38,15 @@
 
     <!--**********************************
         Main wrapper start
-    ***********************************-->
+        ***********************************-->
     <div id="main-wrapper">
         @include('back.includes.header') @yield('content')
         @include('back.includes.footer') @stack('before-script')
         @include('back.includes.script') @stack('after-script')
     </div>
     <!--**********************************
-        Main wrapper end
-    ***********************************-->
+            Main wrapper end
+            ***********************************-->
     @livewireScripts
 </body>
 

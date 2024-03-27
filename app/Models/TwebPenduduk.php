@@ -16,4 +16,9 @@ class TwebPenduduk extends Model
     {
         return $this->hasMany(TwebPendudukPendidikanKk::class, 'id', 'pendidikan_kk_id');
     }
+
+    public function alamate()
+    {
+        return $this->belongsTo(TwebWilClusterDesa::class, 'id_cluster', 'id');
+    }
 }
