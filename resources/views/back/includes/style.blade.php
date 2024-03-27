@@ -5,3 +5,6 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/nouislider/nouislider.min.css') }}">
     <!-- Style css -->
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+
+    <!-- Datatable -->
+    <link href="{{ asset('assets/vendor/datatables/css/jquery.dataTables.min.css') }}" rel="stylesheet">

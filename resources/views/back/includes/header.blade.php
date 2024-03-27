@@ -895,7 +895,7 @@
             <!-- https://tnkarimunjawa.id/assets/dist/icons/flaticon_1/flaticon_1.html -->
             <li>
                 <a href="{{ route('dashboard') }}" class="ai-icon" aria-expanded="false">
-                     <i class="flaticon-017-clipboard"></i>
+                     <i class="flaticon-024-dashboard"></i>
                     <span class="nav-text">Dashboard</span>
                 </a>
             </li>
