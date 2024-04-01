@@ -28,6 +28,20 @@
                                 'wire:model.live' => 'dusTerpilih',
                             ]) !!}
                         </div>
+                        <div class="col-lg-6">
+                            {!! Form::select('rw', $rw, null, [
+                                'placeholder' => 'Silahkan Pilih RW',
+                                'class' => 'form-control wide mb-3',
+                                'wire:model.live' => 'rwTerpilih',
+                            ]) !!}
+                        </div>
+                        <div class="col-lg-6">
+                            {!! Form::select('rt', $rw, null, [
+                                'placeholder' => 'Silahkan Pilih RT',
+                                'class' => 'form-control wide mb-3',
+                                'wire:model.live' => 'rtTerpilih',
+                            ]) !!}
+                        </div>
                     </div>
                     <div class="row">
                         <table id="jmbt" class="table display" style="min-width: 845px">
