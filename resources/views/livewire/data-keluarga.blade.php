@@ -42,6 +42,78 @@
                                 'wire:model.live' => 'rtTerpilih',
                             ]) !!}
                         </div>
+                        <div class="col-lg-6">
+                            {!! Form::select('jkel', $jkel, null, [
+                                'placeholder' => 'Silahkan Jenis Kelamin',
+                                'class' => 'form-control wide mb-3',
+                                'wire:model.live' => 'jkelTerpilih',
+                            ]) !!}
+                        </div>
+                       @if($jkelTerpilih == '2') 
+                       <div class="col-lg-6">
+                           {!! Form::select('hamil', $hamil, null, [
+                               'placeholder' => 'Status Kehamilan',
+                               'class' => 'form-control wide mb-3',
+                               'wire:model.live' => 'hamilTerpilih',
+                           ]) !!}
+                       </div>
+                       <div class="col-lg-6">
+                           {!! Form::select('kb', $kb, null, [
+                               'placeholder' => 'Cara KB',
+                               'class' => 'form-control wide mb-3',
+                               'wire:model.live' => 'kbTerpilih',
+                           ]) !!}
+                       </div>
+                       @endif 
+                        <div class="col-lg-6">
+                            {!! Form::select('agama', $agama, null, [
+                                'placeholder' => 'Silahkan Pilih Agama',
+                                'class' => 'form-control wide mb-3',
+                                'wire:model.live' => 'agamaTerpilih',
+                            ]) !!}
+                        </div>
+                        <div class="col-lg-6">
+                            {!! Form::select('kawin', $kawin, null, [
+                                'placeholder' => 'Silahkan Pilih Status Kawin',
+                                'class' => 'form-control wide mb-3',
+                                'wire:model.live' => 'kawinTerpilih',
+                            ]) !!}
+                        </div>
+                        <div class="col-lg-6">
+                            {!! Form::select('pendidikan', $pendidikan, null, [
+                                'placeholder' => 'Silahkan Pilih Jenjang Pendidikan',
+                                'class' => 'form-control wide mb-3',
+                                'wire:model.live' => 'pendidikanTerpilih',
+                            ]) !!}
+                        </div>
+                        <div class="col-lg-6">
+                            {!! Form::select('pekerjaan', $pekerjaan, null, [
+                                'placeholder' => 'Silahkan Pilih Pekerjaan',
+                                'class' => 'form-control wide mb-3',
+                                'wire:model.live' => 'pekerjaanTerpilih',
+                            ]) !!}
+                        </div>
+                        <div class="col-lg-6">
+                            {!! Form::select('golDarah', $golDarah, null, [
+                                'placeholder' => 'Silahkan Pilih Golongan Darah',
+                                'class' => 'form-control wide mb-3',
+                                'wire:model.live' => 'golDarahTerpilih',
+                            ]) !!}
+                        </div>
+                        <div class="col-lg-6">
+                            {!! Form::select('cacat', $cacat, null, [
+                                'placeholder' => 'Silahkan Pilih Cacat',
+                                'class' => 'form-control wide mb-3',
+                                'wire:model.live' => 'cacatTerpilih',
+                            ]) !!}
+                        </div>
+                        <div class="col-lg-6">
+                            {!! Form::select('sakit', $sakit, null, [
+                                'placeholder' => 'Silahkan Pilih Sakit Menahun',
+                                'class' => 'form-control wide mb-3',
+                                'wire:model.live' => 'sakitTerpilih',
+                            ]) !!}
+                        </div>
                     </div>
                     <div class="row">
                         <table id="jmbt" class="table display" style="min-width: 845px">
