@@ -66,7 +66,7 @@ class Statistik extends Component
 
         $datastring = json_decode(json_encode($this->data), true);
         // Calculate totals
-       
+
         //menghitung jumlah
         foreach ($datastring as $row) {
             $this->jumlah += $row['total'];
@@ -109,7 +109,7 @@ class Statistik extends Component
     ");
 
         $datastring = json_decode(json_encode($this->data), true);
-       
+
         foreach ($datastring as $row) {
             $this->jumlah += $row['total'];
             $this->totallaki += $row['laki'];
@@ -139,7 +139,7 @@ class Statistik extends Component
         GROUP BY u.id;");
 
         $datastring = json_decode(json_encode($this->data), true);
-      
+
         foreach ($datastring as $row) {
             $this->jumlah += $row['total'];
             $this->totallaki += $row['laki'];
@@ -175,7 +175,7 @@ class Statistik extends Component
         ;");
 
         $datastring = json_decode(json_encode($this->data), true);
-     
+
         foreach ($datastring as $row) {
             $this->jumlah += $row['total'];
             $this->totallaki += $row['laki'];
@@ -224,7 +224,8 @@ class Statistik extends Component
         WHERE `tweb_penduduk`.`status_dasar` = 1;');
         return $semua;
     }
-    public function data_jml_semua_keluarga(){
+    public function data_jml_semua_keluarga()
+    {
         return DB::select("SELECT 
         COUNT(k.id) AS jumlah,
         COUNT(CASE WHEN p.sex = 1 THEN p.id END) AS laki,
@@ -252,13 +253,13 @@ class Statistik extends Component
                     ORDER BY u.id ASC;');
 
         $datastring = json_decode(json_encode($this->data), true);
-      
+
         foreach ($datastring as $row) {
             $this->jumlah += $row['total'];
             $this->totallaki += $row['laki'];
             $this->totalperem += $row['perempuan'];
         }
-        
+
         foreach ($this->data_jml_semua_penduduk() as $data) {
             $this->menghitungBarisTotal($data);
         }
@@ -285,7 +286,7 @@ class Statistik extends Component
         $this->baris_persen_belum['laki'] = number_format($this->baris_belum['laki'] / $data->jumlah * 100, 2);
         $this->baris_persen_belum['cewe'] = number_format($this->baris_belum['cewe'] / $data->jumlah * 100, 2);
     }
-   
+
     public function tampilkan()
     {
         $rules = [
@@ -371,7 +372,7 @@ class Statistik extends Component
             } else if ($id == 23) {
                 $where = "u.sasaran = '2' AND (u.config_id = {$this->configId} OR u.config_id IS NULL)";
                 $this->bantuan($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $where);
-            }else {
+            } else {
                 $this->select_jml_penduduk_per_kategori($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul']);
             }
         } else {
@@ -403,19 +404,19 @@ class Statistik extends Component
                             $where
                         GROUP BY 
                             u.id;");
-       
+
         $this->hitung_total($id_referensi);
 
-        if($id_referensi == '1'){
+        if ($id_referensi == '1') {
             foreach ($this->data_jml_penduduk_hidup() as $data) {
                 $this->menghitungBarisTotal($data);
             }
             foreach ($this->data_jml_penduduk_hidup() as $data) {
                 $this->menghitungBarisBelum($data);
             }
-        }else{
+        } else {
             foreach ($this->data_jml_semua_keluarga() as $data) {
-            $this->menghitungBarisTotal($data);
+                $this->menghitungBarisTotal($data);
             }
             foreach ($this->data_jml_semua_keluarga() as $data) {
                 $this->menghitungBarisBelum($data);
@@ -425,7 +426,8 @@ class Statistik extends Component
         $this->penerima($tabel_referensi, $where);
     }
 
-    public function penerima($tabel_referensi, $where){
+    public function penerima($tabel_referensi, $where)
+    {
         $this->daftar_penerima = DB::select("SELECT u.id, u.nama AS program, p.nama AS nama_peserta, a.dusun, a.rt, a.rw
         FROM 
             $tabel_referensi u
@@ -438,9 +440,10 @@ class Statistik extends Component
         WHERE 
             $where");
         $daftar_penerima_array = json_decode(json_encode($this->daftar_penerima), true);
-        $this->dispatch('penerima', data:$daftar_penerima_array);
+        $this->dispatch('penerima', data: $daftar_penerima_array);
     }
-    public function hitung_total($id_referensi){
+    public function hitung_total($id_referensi)
+    {
         $jumlah = DB::select("SELECT 
             COUNT(DISTINCT pp.peserta) AS jumlah,
             COUNT(DISTINCT CASE WHEN p.sex = 1 THEN p.id END) AS laki,
@@ -461,9 +464,9 @@ class Statistik extends Component
             AND (u.config_id = {$this->configId} OR u.config_id IS NULL);");
         $datastring = json_decode(json_encode($jumlah), true);
         foreach ($datastring as $row) {
-                $this->jumlah = $row['jumlah'];
-                $this->totallaki = $row['laki'];
-                $this->totalperem = $row['perempuan'];
+            $this->jumlah = $row['jumlah'];
+            $this->totallaki = $row['laki'];
+            $this->totalperem = $row['perempuan'];
         }
     }
     public function select_jml_penduduk_per_kategori($id_referensi, $tabel_referensi, $judul)
@@ -483,7 +486,7 @@ class Statistik extends Component
                         GROUP BY 
                             u.id");
         $datastring = json_decode(json_encode($this->data), true);
-      
+
         foreach ($datastring as $row) {
             $this->jumlah += $row['total'];
             $this->totallaki += $row['laki'];
@@ -519,7 +522,7 @@ class Statistik extends Component
             u.id
     ");
         $datastring = json_decode(json_encode($this->data), true);
-      
+
         foreach ($datastring as $row) {
             $this->jumlah += $row['total'];
             $this->totallaki += $row['laki'];

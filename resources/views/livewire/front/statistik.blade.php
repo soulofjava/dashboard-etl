@@ -210,9 +210,9 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            @if($daftar_penerima)
-                            <table id="example" class="display" style="width:100%">
-                            </table>
+                            @if ($daftar_penerima)
+                                <table id="example" class="display" style="width:100%">
+                                </table>
                             @endif
                         @else
                             <p>tidak ada data</p>
@@ -313,7 +313,7 @@
                                         </ul>
                                     </div>
                                 </li>
-                                <li class="mb-1">
+                                {{-- <li class="mb-1">
                                     <h4> <a href="#" class="align-items-center rounded collapsed link-body"
                                             data-bs-toggle="collapse" data-bs-target="#rtm-collapse"
                                             aria-expanded="false"> Statistik RTM
@@ -324,7 +324,7 @@
                                                     class="link-body">BDT</span></li>
                                         </ul>
                                     </div>
-                                </li>
+                                </li> --}}
                             </ul>
                         </div>
                         <!-- /.widget -->
@@ -353,7 +353,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
     <script>
-      document.addEventListener('livewire:init', function() {
+        document.addEventListener('livewire:init', function() {
             window.addEventListener('penerima', event => {
                 $(document).ready(function() {
                     const penerima = event.detail.data;
@@ -372,22 +372,27 @@
                         dataSource.push([
                             dataItem.program,
                             dataItem.nama_peserta,
-                            alamat 
+                            alamat
                         ]);
                     });
                     new DataTable('#example', {
-                        columns: [
-                            { title: 'Program' },
-                            { title: 'Penerima' },
-                            { title: 'Alamat' },
+                        columns: [{
+                                title: 'Program'
+                            },
+                            {
+                                title: 'Penerima'
+                            },
+                            {
+                                title: 'Alamat'
+                            },
                         ],
                         data: dataSource
                     });
-                }); 
+                });
             });
         });
 
-      
+
         document.addEventListener('livewire:init', function() {
             window.addEventListener('column', event => {
                 var dataArray = event.detail.data;
