@@ -9,6 +9,7 @@
                 <div class="blog grid grid-view">
                     <div class="row isotope gx-md-8 gy-8 mb-8">
                         @foreach ($kelurahan as $k)
+
                             <article class="item post col-md-4">
                                 <div class="card">
                                     <figure class="card-img-top overlay overlay-1 hover-scale"><a href="#"> <img
@@ -37,14 +38,14 @@
                                         <div>
                                             <ul class="post-meta">
                                                 <li class="post-date"><i class="uil uil-users-alt"></i><span>
-                                                        {{ $k->penduduk->count() }} Penduduk</span>
+                                                        {{ $k->penduduk_count }} Penduduk</span>
                                                 </li>
                                                 <li class="post-comments"><a href="#"><i
-                                                            class="uil uil-chat-bubble-user"></i>{{ $k->keluarga->count() }}
+                                                            class="uil uil-chat-bubble-user"></i>{{ $k->keluarga_count }}
                                                         Keluarga</a>
                                                 </li>
                                                 <li class="post-likes ms-auto"><a href="#"><i
-                                                            class="uil uil-heart-alt"></i>{{ $k->rtm->count() }} RTM</a>
+                                                            class="uil uil-heart-alt"></i>{{ $k->rtm_count}} RTM</a>
                                                 </li>
                                             </ul>
                                             <!-- /.post-meta -->

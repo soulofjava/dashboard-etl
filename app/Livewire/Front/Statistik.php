@@ -41,7 +41,7 @@ class Statistik extends Component
     {
         $this->judul = $judul;
         $this->data = DB::select("
-        SELECT 
+        SELECT
             $select,
             (SELECT COUNT(b.id)
              FROM penduduk_hidup b
@@ -64,30 +64,100 @@ class Statistik extends Component
         GROUP BY u.id;
     ");
 
-        $datastring = json_decode(json_encode($this->data), true);
-        // Calculate totals
+        // $datastring = json_decode(json_encode($this->data), true);
+        // // Calculate totals
 
-        //menghitung jumlah
-        foreach ($datastring as $row) {
-            $this->jumlah += $row['total'];
-            $this->totallaki += $row['laki'];
-            $this->totalperem += $row['perempuan'];
-        }
+        // //menghitung jumlah
+        // foreach ($datastring as $row) {
+        //     $this->jumlah += $row['total'];
+        //     $this->totallaki += $row['laki'];
+        //     $this->totalperem += $row['perempuan'];
+        // }
 
-        foreach ($this->data_jml_penduduk_hidup() as $data) {
-            $this->menghitungBarisTotal($data);
-        }
-        foreach ($this->data_jml_penduduk_hidup() as $data) {
-            $this->menghitungBarisBelum($data);
-        }
+        // foreach ($this->data_jml_penduduk_hidup() as $data) {
+        //     $this->menghitungBarisTotal($data);
+        // }
+        // foreach ($this->data_jml_penduduk_hidup() as $data) {
+        //     $this->menghitungBarisBelum($data);
+        // }
 
-        $this->dispatch('column', data: $this->data);
+        // $this->dispatch('column', data: $this->data);
+    }
+
+    public function umur14()
+    {
+        $a = DB::select("
+        WITH TotalPenduduk AS (
+    SELECT
+        config_id,
+        COUNT(*) AS total_penduduk
+    FROM
+        penduduk_hidup
+    WHERE
+        config_id = 110
+    GROUP BY
+        config_id
+),
+DetailPenduduk AS (
+    SELECT
+        ph.config_id,
+        tu.nama,
+        tu.dari AS dari,
+        tu.sampai AS sampai,
+        COUNT(CASE WHEN ph.sex = 1 THEN 1 END) AS laki,
+        COUNT(CASE WHEN ph.sex = 2 THEN 1 END) AS perempuan,
+        COUNT(*) AS total,
+        ROUND((COUNT(CASE WHEN ph.sex = 1 THEN 1 END) / tp.total_penduduk) * 100, 2) AS persen_laki_laki,
+        ROUND((COUNT(CASE WHEN ph.sex = 2 THEN 1 END) / tp.total_penduduk) * 100, 2) AS persen_perempuan,
+        ROUND((COUNT(*) / tp.total_penduduk) * 100, 2) AS persen_total_dalam_rentang,
+        tu.status
+    FROM
+        penduduk_hidup ph
+    JOIN
+        tweb_penduduk_umur tu ON ph.config_id = tu.config_id
+    JOIN
+        TotalPenduduk tp ON ph.config_id = tp.config_id
+    WHERE
+        ph.config_id = 110
+        AND tu.status = 1
+        AND TIMESTAMPDIFF(YEAR, ph.tanggallahir, CURDATE()) BETWEEN tu.dari AND tu.sampai
+    GROUP BY
+        ph.config_id, tu.nama, tu.dari, tu.sampai, tp.total_penduduk
+)
+SELECT
+    dp.config_id,
+    dp.nama,
+    dp.dari,
+    dp.sampai,
+    dp.laki,
+    dp.perempuan,
+    dp.total,
+    dp.persen_laki_laki,
+    dp.persen_perempuan,
+    dp.persen_total_dalam_rentang,
+    SUM(tp.total_penduduk) AS total_keseluruhan_penduduk,
+    ROUND(SUM(dp.persen_laki_laki), 2) AS total_keseluruhan_persen_laki_laki,
+    ROUND(SUM(dp.persen_perempuan), 2) AS total_keseluruhan_persen_perempuan,
+    SUM(dp.laki) AS total_laki_laki,
+    SUM(dp.perempuan) AS total_perempuan
+FROM
+    DetailPenduduk dp
+JOIN
+    TotalPenduduk tp ON dp.config_id = tp.config_id
+GROUP BY
+    dp.config_id, dp.nama, dp.dari, dp.sampai
+ORDER BY
+    dp.config_id, dp.dari
+            ");
+
+            $this->data =  $a;
+            $this->dispatch('column', data:  $a);
     }
     public function ktp($tabel_referensi, $judul, $select, $where)
     {
         $this->judul = $judul;
         $this->data = DB::select("
-        SELECT 
+        SELECT
             $select,
             (SELECT COUNT(b.id)
              FROM penduduk_hidup b
@@ -129,7 +199,7 @@ class Statistik extends Component
     {
         $this->judul = $judul;
         $this->data = DB::select("
-        SELECT 
+        SELECT
         u.*, COUNT(k.id) as total,
         COUNT(CASE WHEN k.status_covid = u.id AND p.sex = 1 THEN k.id_terdata END) AS laki,
         COUNT(CASE WHEN k.status_covid = u.id AND p.sex = 2 THEN k.id_terdata END) AS perempuan
@@ -160,17 +230,17 @@ class Statistik extends Component
         $this->judul = $judul;
         $this->data = DB::select("
         SELECT u.suku AS id,
-            u.suku AS nama,  
+            u.suku AS nama,
             COUNT(u.sex) AS total,
             COUNT(CASE WHEN u.sex = 1 THEN 1 END) AS laki,
             COUNT(CASE WHEN u.sex = 2 THEN 1 END) AS perempuan
-        FROM 
+        FROM
             penduduk_hidup u
-        LEFT JOIN 
+        LEFT JOIN
             tweb_wil_clusterdesa a ON u.id_cluster = a.id
-        WHERE 
+        WHERE
             u.suku IS NOT NULL AND u.suku != ''
-        GROUP BY 
+        GROUP BY
             u.suku;
         ;");
 
@@ -204,7 +274,7 @@ class Statistik extends Component
     }
     public function data_jml_semua_penduduk()
     {
-        $semua = DB::select('SELECT 
+        $semua = DB::select('SELECT
                 COUNT(k.id) as jumlah,
                 COUNT(CASE WHEN p.sex = 1 THEN p.id END) AS laki,
                 COUNT(CASE WHEN p.sex = 2 THEN p.id END) AS perempuan
@@ -219,29 +289,29 @@ class Statistik extends Component
         $semua = DB::select('SELECT COUNT(`tweb_penduduk`.`id`) AS jumlah,
             COUNT(CASE WHEN `tweb_penduduk`.`sex` = 1 THEN `tweb_penduduk`.`id` END) AS laki,
             COUNT(CASE WHEN `tweb_penduduk`.`sex` = 2 THEN `tweb_penduduk`.`id` END) AS perempuan
-        FROM `tweb_penduduk` 
-        LEFT JOIN `tweb_wil_clusterdesa` AS a ON `tweb_penduduk`.`id_cluster` = `a`.`id` 
+        FROM `tweb_penduduk`
+        LEFT JOIN `tweb_wil_clusterdesa` AS a ON `tweb_penduduk`.`id_cluster` = `a`.`id`
         WHERE `tweb_penduduk`.`status_dasar` = 1;');
         return $semua;
     }
     public function data_jml_semua_keluarga()
     {
-        return DB::select("SELECT 
+        return DB::select("SELECT
         COUNT(k.id) AS jumlah,
         COUNT(CASE WHEN p.sex = 1 THEN p.id END) AS laki,
         COUNT(CASE WHEN p.sex = 2 THEN p.id END) AS perempuan
-    FROM 
+    FROM
         keluarga_aktif k
-    LEFT JOIN 
+    LEFT JOIN
         tweb_penduduk p ON p.id = k.nik_kepala
-    LEFT JOIN 
+    LEFT JOIN
         tweb_wil_clusterdesa a ON p.id_cluster = a.id;");
     }
     public function kelasSosial()
     {
         $this->judul = 'kelas Sosial';
         $this->data = DB::select('
-                            SELECT u.*, 
+                            SELECT u.*,
                         COUNT(CASE WHEN k.kelas_sosial = u.id AND p.sex = 1 THEN p.id END) + COUNT(CASE WHEN k.kelas_sosial = u.id AND p.sex = 2 THEN p.id END) AS total,
                         COUNT(CASE WHEN k.kelas_sosial = u.id AND p.sex = 1 THEN p.id END) AS laki,
                         COUNT(CASE WHEN k.kelas_sosial = u.id AND p.sex = 2 THEN p.id END) AS perempuan
@@ -289,6 +359,7 @@ class Statistik extends Component
 
     public function tampilkan()
     {
+
         $rules = [
             'selectKecamatan' => 'required',
             'selectDesa' => 'required'
@@ -300,12 +371,15 @@ class Statistik extends Component
             $this->show = true;
             $this->configId = $this->cari->id;
         }
+
         $this->totalPendudukDesa = TwebPenduduk::where('config_id', '=', $this->configId)->count();
+
         $this->totalKeluargaDesa = TwebKeluarga::where('config_id', '=', $this->configId)->count();
+
         $this->rtmDesa = TwebRtm::where('config_id', '=', $this->configId)->count();
         $this->bantuanDesa =  Program::where('config_id', '=', $this->configId)->count();
 
-        $this->statistik(14);
+         $this->umur14();
     }
 
     public function statistik($id)
@@ -385,24 +459,24 @@ class Statistik extends Component
         $this->judul = $judul;
         $this->judul_jumlah = "PENERIMA";
         $this->judul_belum = "BUKAN PENERIMA";
-        $this->data = DB::select("SELECT 
-                            u.id, 
-                            u.nama, 
-                            u.*, 
+        $this->data = DB::select("SELECT
+                            u.id,
+                            u.nama,
+                            u.*,
                             COUNT(pp.peserta) AS total,
                             COUNT(CASE WHEN p.sex = 1 THEN p.id END) AS laki,
                             COUNT(CASE WHEN p.sex = 2 THEN p.id END) AS perempuan
-                        FROM 
+                        FROM
                             $tabel_referensi u
-                        LEFT JOIN 
+                        LEFT JOIN
                             program_peserta pp ON pp.program_id = u.id
-                        LEFT JOIN 
+                        LEFT JOIN
                             tweb_penduduk p ON pp.peserta = p.nik
-                        LEFT JOIN 
+                        LEFT JOIN
                             tweb_wil_clusterdesa a ON p.id_cluster = a.id
-                        WHERE 
+                        WHERE
                             $where
-                        GROUP BY 
+                        GROUP BY
                             u.id;");
 
         $this->hitung_total($id_referensi);
@@ -429,37 +503,37 @@ class Statistik extends Component
     public function penerima($tabel_referensi, $where)
     {
         $this->daftar_penerima = DB::select("SELECT u.id, u.nama AS program, p.nama AS nama_peserta, a.dusun, a.rt, a.rw
-        FROM 
+        FROM
             $tabel_referensi u
-        LEFT JOIN 
+        LEFT JOIN
             program_peserta pp ON pp.program_id = u.id
-        LEFT JOIN 
+        LEFT JOIN
             tweb_penduduk p ON pp.peserta = p.nik
-        LEFT JOIN 
+        LEFT JOIN
             tweb_wil_clusterdesa a ON p.id_cluster = a.id
-        WHERE 
+        WHERE
             $where");
         $daftar_penerima_array = json_decode(json_encode($this->daftar_penerima), true);
         $this->dispatch('penerima', data: $daftar_penerima_array);
     }
     public function hitung_total($id_referensi)
     {
-        $jumlah = DB::select("SELECT 
+        $jumlah = DB::select("SELECT
             COUNT(DISTINCT pp.peserta) AS jumlah,
             COUNT(DISTINCT CASE WHEN p.sex = 1 THEN p.id END) AS laki,
             COUNT(DISTINCT CASE WHEN p.sex = 2 THEN p.id END) AS perempuan,
             COUNT(DISTINCT CASE WHEN p.status_dasar <> 1 THEN p.id END) AS jumlah_nonaktif,
             COUNT(DISTINCT CASE WHEN p.status_dasar <> 1 AND p.sex = 1 THEN p.id END) AS jumlah_nonaktif_laki,
             COUNT(DISTINCT CASE WHEN p.status_dasar <> 1 AND p.sex = 2 THEN p.id END) AS jumlah_nonaktif_perempuan
-        FROM 
+        FROM
             program u
-        LEFT JOIN 
+        LEFT JOIN
             program_peserta pp ON pp.program_id = u.id
-        LEFT JOIN 
+        LEFT JOIN
             tweb_penduduk p ON pp.peserta = p.nik
-        LEFT JOIN 
+        LEFT JOIN
             tweb_wil_clusterdesa a ON p.id_cluster = a.id
-        WHERE 
+        WHERE
             u.sasaran = $id_referensi
             AND (u.config_id = {$this->configId} OR u.config_id IS NULL);");
         $datastring = json_decode(json_encode($jumlah), true);
@@ -472,18 +546,18 @@ class Statistik extends Component
     public function select_jml_penduduk_per_kategori($id_referensi, $tabel_referensi, $judul)
     {
         $this->judul = $judul;
-        $this->data = DB::select("SELECT 
+        $this->data = DB::select("SELECT
                             u.*,
                             COUNT(p.id) AS total,
                             COUNT(CASE WHEN p.sex = 1 THEN p.id END) AS laki,
                             COUNT(CASE WHEN p.sex = 2 THEN p.id END) AS perempuan
-                        FROM 
+                        FROM
                             $tabel_referensi u
-                        LEFT JOIN 
+                        LEFT JOIN
                             penduduk_hidup p ON u.id = p.$id_referensi AND p.config_id = $this->configId
-                        LEFT JOIN 
+                        LEFT JOIN
                             tweb_wil_clusterdesa a ON p.id_cluster = a.id
-                        GROUP BY 
+                        GROUP BY
                             u.id");
         $datastring = json_decode(json_encode($this->data), true);
 
@@ -495,7 +569,7 @@ class Statistik extends Component
         foreach ($this->data_jml_penduduk_hidup() as $data) {
             $this->menghitungBarisTotal($data);
         }
-        //menghitung sisa 
+        //menghitung sisa
         foreach ($this->data_jml_penduduk_hidup() as $data) {
             $this->menghitungBarisBelum($data);
         }
@@ -505,20 +579,20 @@ class Statistik extends Component
     {
         $this->judul = $judul;
         $this->data = DB::select("
-        SELECT 
+        SELECT
             u.*,
             COUNT(p.id) AS total,
             COUNT(CASE WHEN p.sex = 1 THEN p.id END) AS laki,
             COUNT(CASE WHEN p.sex = 2 THEN p.id END) AS perempuan
-        FROM 
+        FROM
             $tabel_referensi u
-        LEFT JOIN 
+        LEFT JOIN
             penduduk_hidup p ON u.id = p.$id_referensi AND p.config_id = $this->configId
-        LEFT JOIN 
+        LEFT JOIN
             tweb_wil_clusterdesa a ON p.id_cluster = a.id
-        WHERE 
+        WHERE
             $where
-        GROUP BY 
+        GROUP BY
             u.id
     ");
         $datastring = json_decode(json_encode($this->data), true);
