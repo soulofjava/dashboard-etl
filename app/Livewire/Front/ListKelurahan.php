@@ -4,13 +4,19 @@ namespace App\Livewire\Front;
 
 use App\Models\Config;
 use Livewire\Component;
+use Illuminate\Support\Facades\Cache;
+
 
 class ListKelurahan extends Component
 {
     public $kelurahan;
 
     public function mount(){
-        $this->kelurahan = Config::get();
+        $this->kelurahan =
+        Cache::remember('kelurahan', 60, function () {
+         return Config::withCount('keluarga')->withCount('penduduk')->withCount('rtm')->get();
+        });
+
     }
     public function render()
     {

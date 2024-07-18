@@ -150,16 +150,16 @@
                                             <th scope="row">{{ $no++ }}</th>
                                             <td>{{ $row->nama }}</td>
                                             <td>{{ $row->total }}</td>
-                                            <td>{{ number_format(($row->total / $baris_total['jumlah']) * 100, 2) ?? '' }}%
+                                            <td>{{ $row->persen_total_dalam_rentang??""}}%
                                             </td>
                                             <td>{{ $row->laki ?? '' }} </td>
-                                            <td>{{ number_format(($row->laki / $baris_total['jumlah']) * 100, 2) ?? '' }}%
+                                            <td>{{$row->persen_laki_laki??"" }}%
                                             </td>
                                             <td>{{ $row->perempuan ?? '' }}</td>
-                                            <td>{{ number_format(($row->perempuan / $baris_total['jumlah']) * 100, 2) ?? '' }}%
+                                            <td>{{$row->persen_perempuan??"" }}%
                                             </td>
                                         </tr>
-                                        @php
+                                        {{-- @php
                                             $totalpresentasi += number_format(
                                                 ($row->total / $baris_total['jumlah']) * 100,
                                                 2,
@@ -172,18 +172,20 @@
                                                 ($row->perempuan / $baris_total['jumlah']) * 100,
                                                 2,
                                             );
-                                        @endphp
+                                        @endphp --}}
                                     @endforeach
-                                    <tr>
-                                        <td colspan="2" class="font-weight-bold">{{ $judul_jumlah }}</td>
-                                        <td class="text-right"> {{ $jumlah ?? '' }}</td>
-                                        <td class="text-right">{{ $totalpresentasi ?? '' }} %</td>
-                                        <td class="text-right"> {{ $totallaki ?? '' }}</td>
-                                        <td class="text-right">{{ $totallakipresen ?? '' }} %</td>
-                                        <td class="text-right"> {{ $totalperem ?? '' }}</td>
-                                        <td class="text-right">{{ $totalcewepresen ?? '' }} %</td>
-                                    </tr>
-                                    <tr>
+                                    @if($data)
+                                    {{-- <tr>
+                                        <td colspan="2" class="font-weight-bold">Jumlah</td>
+                                        <td class="text-right"> {{ $row->total_keseluruhan_penduduk }}</td>
+                                        <td class="text-right">{{100 }} %</td>
+                                        <td class="text-right"> {{ $row->total_laki_laki ?? '' }}</td>
+                                        <td class="text-right">{{ $total_keseluruhan_persen_laki_laki ?? '' }} %</td>
+                                        <td class="text-right"> {{ $row->total_perempuan ?? '' }}</td>
+                                        <td class="text-right">{{ $row->total_keseluruhan_persen_perempuan ?? '' }} %</td>
+                                    </tr> --}}
+                                    @endif
+                                    {{-- <tr>
                                         <td colspan="2" class="font-weight-bold">{{ $judul_belum }}</td>
                                         <td class="text-right"> {{ $baris_belum['jumlah'] ?? '' }}</td>
                                         <td class="text-right">{{ $baris_persen_belum['jumlah'] ?? '' }} %</td>
@@ -191,8 +193,8 @@
                                         <td class="text-right">{{ $baris_persen_belum['laki'] ?? '' }} %</td>
                                         <td class="text-right"> {{ $baris_belum['cewe'] ?? '' }}</td>
                                         <td class="text-right">{{ $baris_persen_belum['cewe'] ?? '' }} %</td>
-                                    </tr>
-                                    <tr>
+                                    </tr> --}}
+                                    {{-- <tr>
                                         <td colspan="2" class="font-weight-bold">Total</td>
                                         <td class="text-right"> {{ $baris_total['jumlah'] ?? '' }}</td>
                                         <td class="text-right">
@@ -207,7 +209,7 @@
                                         <td class="text-right">
                                             {{ $totalcewepresen + $baris_persen_belum['cewe'] ?? '' }}%
                                         </td>
-                                    </tr>
+                                    </tr> --}}
                                 </tbody>
                             </table>
                             @if ($daftar_penerima)
