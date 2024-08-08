@@ -87,71 +87,71 @@ class Statistik extends Component
     public function umur14()
     {
         $a = DB::select("
-        WITH TotalPenduduk AS (
-    SELECT
-        config_id,
-        COUNT(*) AS total_penduduk
-    FROM
-        penduduk_hidup
-    WHERE
-        config_id = 110
-    GROUP BY
-        config_id
-),
-DetailPenduduk AS (
-    SELECT
-        ph.config_id,
-        tu.nama,
-        tu.dari AS dari,
-        tu.sampai AS sampai,
-        COUNT(CASE WHEN ph.sex = 1 THEN 1 END) AS laki,
-        COUNT(CASE WHEN ph.sex = 2 THEN 1 END) AS perempuan,
-        COUNT(*) AS total,
-        ROUND((COUNT(CASE WHEN ph.sex = 1 THEN 1 END) / tp.total_penduduk) * 100, 2) AS persen_laki_laki,
-        ROUND((COUNT(CASE WHEN ph.sex = 2 THEN 1 END) / tp.total_penduduk) * 100, 2) AS persen_perempuan,
-        ROUND((COUNT(*) / tp.total_penduduk) * 100, 2) AS persen_total_dalam_rentang,
-        tu.status
-    FROM
-        penduduk_hidup ph
-    JOIN
-        tweb_penduduk_umur tu ON ph.config_id = tu.config_id
-    JOIN
-        TotalPenduduk tp ON ph.config_id = tp.config_id
-    WHERE
-        ph.config_id = 110
-        AND tu.status = 1
-        AND TIMESTAMPDIFF(YEAR, ph.tanggallahir, CURDATE()) BETWEEN tu.dari AND tu.sampai
-    GROUP BY
-        ph.config_id, tu.nama, tu.dari, tu.sampai, tp.total_penduduk
-)
-SELECT
-    dp.config_id,
-    dp.nama,
-    dp.dari,
-    dp.sampai,
-    dp.laki,
-    dp.perempuan,
-    dp.total,
-    dp.persen_laki_laki,
-    dp.persen_perempuan,
-    dp.persen_total_dalam_rentang,
-    SUM(tp.total_penduduk) AS total_keseluruhan_penduduk,
-    ROUND(SUM(dp.persen_laki_laki), 2) AS total_keseluruhan_persen_laki_laki,
-    ROUND(SUM(dp.persen_perempuan), 2) AS total_keseluruhan_persen_perempuan,
-    SUM(dp.laki) AS total_laki_laki,
-    SUM(dp.perempuan) AS total_perempuan
-FROM
-    DetailPenduduk dp
-JOIN
-    TotalPenduduk tp ON dp.config_id = tp.config_id
-GROUP BY
-    dp.config_id, dp.nama, dp.dari, dp.sampai
-ORDER BY
-    dp.config_id, dp.dari
+                    WITH TotalPenduduk AS (
+                SELECT
+                    config_id,
+                    COUNT(*) AS total_penduduk
+                FROM
+                    penduduk_hidup
+                WHERE
+                    config_id = " . $this->configId . "
+                GROUP BY
+                    config_id
+            ),
+            DetailPenduduk AS (
+                SELECT
+                    ph.config_id,
+                    tu.nama,
+                    tu.dari AS dari,
+                    tu.sampai AS sampai,
+                    COUNT(CASE WHEN ph.sex = 1 THEN 1 END) AS laki,
+                    COUNT(CASE WHEN ph.sex = 2 THEN 1 END) AS perempuan,
+                    COUNT(*) AS total,
+                    ROUND((COUNT(CASE WHEN ph.sex = 1 THEN 1 END) / tp.total_penduduk) * 100, 2) AS persen_laki_laki,
+                    ROUND((COUNT(CASE WHEN ph.sex = 2 THEN 1 END) / tp.total_penduduk) * 100, 2) AS persen_perempuan,
+                    ROUND((COUNT(*) / tp.total_penduduk) * 100, 2) AS persen_total_dalam_rentang,
+                    tu.status
+                FROM
+                    penduduk_hidup ph
+                JOIN
+                    tweb_penduduk_umur tu ON ph.config_id = tu.config_id
+                JOIN
+                    TotalPenduduk tp ON ph.config_id = tp.config_id
+                WHERE
+                    ph.config_id = 110
+                    AND tu.status = 1
+                    AND TIMESTAMPDIFF(YEAR, ph.tanggallahir, CURDATE()) BETWEEN tu.dari AND tu.sampai
+                GROUP BY
+                    ph.config_id, tu.nama, tu.dari, tu.sampai, tp.total_penduduk
+            )
+            SELECT
+                dp.config_id,
+                dp.nama,
+                dp.dari,
+                dp.sampai,
+                dp.laki,
+                dp.perempuan,
+                dp.total,
+                dp.persen_laki_laki,
+                dp.persen_perempuan,
+                dp.persen_total_dalam_rentang,
+                SUM(tp.total_penduduk) AS total_keseluruhan_penduduk,
+                ROUND(SUM(dp.persen_laki_laki), 2) AS total_keseluruhan_persen_laki_laki,
+                ROUND(SUM(dp.persen_perempuan), 2) AS total_keseluruhan_persen_perempuan,
+                SUM(dp.laki) AS total_laki_laki,
+                SUM(dp.perempuan) AS total_perempuan
+            FROM
+                DetailPenduduk dp
+            JOIN
+                TotalPenduduk tp ON dp.config_id = tp.config_id
+            GROUP BY
+                dp.config_id, dp.nama, dp.dari, dp.sampai
+            ORDER BY
+                dp.config_id, dp.dari
             ");
 
-            $this->data =  $a;
-            $this->dispatch('column', data:  $a);
+        $this->data =  $a;
+        $this->dispatch('column', data: $a);
     }
     public function ktp($tabel_referensi, $judul, $select, $where)
     {
@@ -379,7 +379,7 @@ ORDER BY
         $this->rtmDesa = TwebRtm::where('config_id', '=', $this->configId)->count();
         $this->bantuanDesa =  Program::where('config_id', '=', $this->configId)->count();
 
-         $this->umur14();
+        $this->umur14();
     }
 
     public function statistik($id)
