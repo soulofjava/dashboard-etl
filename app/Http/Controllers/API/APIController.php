@@ -13,12 +13,22 @@ class APIController extends Controller
      */
     public function index(Request $request)
     {
-        $name = $request->input('name');
+        $nama = $request->input('nama');
         $nik = $request->input('nik');
 
-        $result = TwebPenduduk::where('nama', 'like', '%' . $name . '%')->orWhere('nik', 'like', '%' . $nik . '%')->get();
+        $result = TwebPenduduk::where('nik', 'LIKE', "%{$nik}%")->where('nama', 'LIKE', "%{$nama}%")->get();
 
-        return response()->json($result);
+        if ($result->isNotEmpty()) {
+            return response()->json([
+                'status' => 'success',
+                'data' => $result
+            ], 200); // 200 adalah kode status HTTP untuk "OK"
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data Tidak Ditemukan'
+            ], 404); // 404 adalah kode status HTTP untuk "Not Found"
+        }
     }
 
     /**
