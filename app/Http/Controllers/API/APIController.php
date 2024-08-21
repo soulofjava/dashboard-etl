@@ -13,8 +13,8 @@ class APIController extends Controller
      */
     public function index(Request $request)
     {
-        $nama = $request->input('nama');
-        $nik = $request->input('nik');
+        $nama = $request->query('nama');
+        $nik = $request->query('nik');
 
         $result = TwebPenduduk::where('nik', 'LIKE', "%{$nik}%")->where('nama', 'LIKE', "%{$nama}%")->get();
 
