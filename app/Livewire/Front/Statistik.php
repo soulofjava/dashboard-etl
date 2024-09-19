@@ -84,75 +84,7 @@ class Statistik extends Component
         // $this->dispatch('column', data: $this->data);
     }
 
-    public function umur14()
-    {
-        $a = DB::select("
-                    WITH TotalPenduduk AS (
-                SELECT
-                    config_id,
-                    COUNT(*) AS total_penduduk
-                FROM
-                    penduduk_hidup
-                WHERE
-                    config_id = " . $this->configId . "
-                GROUP BY
-                    config_id
-            ),
-            DetailPenduduk AS (
-                SELECT
-                    ph.config_id,
-                    tu.nama,
-                    tu.dari AS dari,
-                    tu.sampai AS sampai,
-                    COUNT(CASE WHEN ph.sex = 1 THEN 1 END) AS laki,
-                    COUNT(CASE WHEN ph.sex = 2 THEN 1 END) AS perempuan,
-                    COUNT(*) AS total,
-                    ROUND((COUNT(CASE WHEN ph.sex = 1 THEN 1 END) / tp.total_penduduk) * 100, 2) AS persen_laki_laki,
-                    ROUND((COUNT(CASE WHEN ph.sex = 2 THEN 1 END) / tp.total_penduduk) * 100, 2) AS persen_perempuan,
-                    ROUND((COUNT(*) / tp.total_penduduk) * 100, 2) AS persen_total_dalam_rentang,
-                    tu.status
-                FROM
-                    penduduk_hidup ph
-                JOIN
-                    tweb_penduduk_umur tu ON ph.config_id = tu.config_id
-                JOIN
-                    TotalPenduduk tp ON ph.config_id = tp.config_id
-                WHERE
-                    ph.config_id = 110
-                    AND tu.status = 1
-                    AND TIMESTAMPDIFF(YEAR, ph.tanggallahir, CURDATE()) BETWEEN tu.dari AND tu.sampai
-                GROUP BY
-                    ph.config_id, tu.nama, tu.dari, tu.sampai, tp.total_penduduk
-            )
-            SELECT
-                dp.config_id,
-                dp.nama,
-                dp.dari,
-                dp.sampai,
-                dp.laki,
-                dp.perempuan,
-                dp.total,
-                dp.persen_laki_laki,
-                dp.persen_perempuan,
-                dp.persen_total_dalam_rentang,
-                SUM(tp.total_penduduk) AS total_keseluruhan_penduduk,
-                ROUND(SUM(dp.persen_laki_laki), 2) AS total_keseluruhan_persen_laki_laki,
-                ROUND(SUM(dp.persen_perempuan), 2) AS total_keseluruhan_persen_perempuan,
-                SUM(dp.laki) AS total_laki_laki,
-                SUM(dp.perempuan) AS total_perempuan
-            FROM
-                DetailPenduduk dp
-            JOIN
-                TotalPenduduk tp ON dp.config_id = tp.config_id
-            GROUP BY
-                dp.config_id, dp.nama, dp.dari, dp.sampai
-            ORDER BY
-                dp.config_id, dp.dari
-            ");
 
-        $this->data =  $a;
-        $this->dispatch('column', data: $a);
-    }
     public function ktp($tabel_referensi, $judul, $select, $where)
     {
         $this->judul = $judul;
@@ -379,9 +311,266 @@ class Statistik extends Component
         $this->rtmDesa = TwebRtm::where('config_id', '=', $this->configId)->count();
         $this->bantuanDesa =  Program::where('config_id', '=', $this->configId)->count();
 
-        $this->umur14();
+        $this->umur14('Rentang Umur');
+    }
+    public function umur14($judul)
+    {
+        $this->judul = $judul;
+        $a = DB::select("
+                    WITH TotalPenduduk AS (
+                SELECT
+                    config_id,
+                    COUNT(*) AS total_penduduk
+                FROM
+                    penduduk_hidup
+                WHERE
+                    config_id = " . $this->configId . "
+                GROUP BY
+                    config_id
+            ),
+            DetailPenduduk AS (
+                SELECT
+                    ph.config_id,
+                    tu.nama,
+                    tu.dari AS dari,
+                    tu.sampai AS sampai,
+                    COUNT(CASE WHEN ph.sex = 1 THEN 1 END) AS laki,
+                    COUNT(CASE WHEN ph.sex = 2 THEN 1 END) AS perempuan,
+                    COUNT(*) AS total,
+                    ROUND((COUNT(CASE WHEN ph.sex = 1 THEN 1 END) / tp.total_penduduk) * 100, 2) AS persen_laki_laki,
+                    ROUND((COUNT(CASE WHEN ph.sex = 2 THEN 1 END) / tp.total_penduduk) * 100, 2) AS persen_perempuan,
+                    ROUND((COUNT(*) / tp.total_penduduk) * 100, 2) AS persen_total_dalam_rentang,
+                    tu.status
+                FROM
+                    penduduk_hidup ph
+                JOIN
+                    tweb_penduduk_umur tu ON ph.config_id = tu.config_id
+                JOIN
+                    TotalPenduduk tp ON ph.config_id = tp.config_id
+                WHERE
+                    ph.config_id = " . $this->configId . "
+                    AND tu.status = 1
+                    AND TIMESTAMPDIFF(YEAR, ph.tanggallahir, CURDATE()) BETWEEN tu.dari AND tu.sampai
+                GROUP BY
+                    ph.config_id, tu.nama, tu.dari, tu.sampai, tp.total_penduduk
+            )
+            SELECT
+                dp.config_id,
+                dp.nama,
+                dp.dari,
+                dp.sampai,
+                dp.laki,
+                dp.perempuan,
+                dp.total,
+                dp.persen_laki_laki,
+                dp.persen_perempuan,
+                dp.persen_total_dalam_rentang,
+                SUM(tp.total_penduduk) AS total_keseluruhan_penduduk,
+                ROUND(SUM(dp.persen_laki_laki), 2) AS total_keseluruhan_persen_laki_laki,
+                ROUND(SUM(dp.persen_perempuan), 2) AS total_keseluruhan_persen_perempuan,
+                SUM(dp.laki) AS total_laki_laki,
+                SUM(dp.perempuan) AS total_perempuan
+            FROM
+                DetailPenduduk dp
+            JOIN
+                TotalPenduduk tp ON dp.config_id = tp.config_id
+            GROUP BY
+                dp.config_id, dp.nama, dp.dari, dp.sampai
+            ORDER BY
+                dp.config_id, dp.dari
+            ");
+
+        $this->data =  $a;
+        $this->dispatch('column', data: $this->data);
     }
 
+    public function umur15($judul)
+    {
+        $this->judul = $judul;
+        $a = DB::select("
+                    WITH TotalPenduduk AS (
+                    SELECT
+                        config_id,
+                        COUNT(*) AS total_penduduk
+                    FROM
+                        penduduk_hidup
+                    WHERE
+                        config_id = " . $this->configId . "
+                    GROUP BY
+                        config_id
+                ),
+                DetailPenduduk AS (
+                    SELECT
+                        ph.config_id,
+                        CONCAT(tu.nama, ' (', CAST(tu.dari AS CHAR), ' - ', CAST(tu.sampai AS CHAR), ')') AS nama,
+                        tu.dari AS dari,
+                        tu.sampai AS sampai,
+                        COUNT(CASE WHEN ph.sex = 1 THEN 1 END) AS laki,
+                        COUNT(CASE WHEN ph.sex = 2 THEN 1 END) AS perempuan,
+                        COUNT(*) AS total,
+                        ROUND((COUNT(CASE WHEN ph.sex = 1 THEN 1 END) / tp.total_penduduk) * 100, 2) AS persen_laki_laki,
+                        ROUND((COUNT(CASE WHEN ph.sex = 2 THEN 1 END) / tp.total_penduduk) * 100, 2) AS persen_perempuan,
+                        ROUND((COUNT(*) / tp.total_penduduk) * 100, 2) AS persen_total_dalam_rentang,
+                        tu.status
+                    FROM
+                        penduduk_hidup ph
+                    JOIN
+                        tweb_penduduk_umur tu ON ph.config_id = tu.config_id
+                    JOIN
+                        TotalPenduduk tp ON ph.config_id = tp.config_id
+                    WHERE
+                        ph.config_id = " . $this->configId . "
+                        AND tu.status = 0
+                        AND TIMESTAMPDIFF(YEAR, ph.tanggallahir, CURDATE()) BETWEEN tu.dari AND tu.sampai
+                    GROUP BY
+                        ph.config_id, tu.nama, tu.dari, tu.sampai, tp.total_penduduk
+                )
+                SELECT
+                    dp.config_id,
+                    dp.nama,
+                    dp.dari,
+                    dp.sampai,
+                    SUM(dp.laki) AS laki,
+                    SUM(dp.perempuan) AS perempuan,
+                    SUM(dp.total) AS total,
+                    ROUND(AVG(dp.persen_laki_laki), 2) AS persen_laki_laki,
+                    ROUND(AVG(dp.persen_perempuan), 2) AS persen_perempuan,
+                    ROUND(AVG(dp.persen_total_dalam_rentang), 2) AS persen_total_dalam_rentang,
+                    ROUND(SUM(dp.laki) / SUM(tp.total_penduduk) * 100, 2) AS total_keseluruhan_persen_laki_laki,
+                    ROUND(SUM(dp.perempuan) / SUM(tp.total_penduduk) * 100, 2) AS total_keseluruhan_persen_perempuan,
+                    ROUND(SUM(dp.total) / SUM(tp.total_penduduk) * 100, 2) AS total_persen_dalam_rentang,
+                    SUM(tp.total_penduduk) AS total_keseluruhan_penduduk
+                FROM
+                    DetailPenduduk dp
+                JOIN
+                    TotalPenduduk tp ON dp.config_id = tp.config_id
+                GROUP BY
+                    dp.config_id, dp.nama, dp.dari, dp.sampai
+                ORDER BY
+                    dp.config_id, dp.dari;
+            ");
+
+        $this->data =  $a;
+        // dd($this->data);
+        $this->dispatch('column', data: $this->data);
+    }
+    public function umur16($judul)
+    {
+        $this->judul = $judul;
+        $a = DB::select("
+        WITH TotalPenduduk AS (
+        SELECT
+            config_id,
+            COUNT(*) AS total_penduduk
+        FROM
+            penduduk_hidup
+        WHERE
+            config_id = " . $this->configId . "
+        GROUP BY
+            config_id
+    ),
+    DetailPenduduk AS (
+        SELECT
+            ph.config_id,
+            CONCAT(tu.nama, ' (', CAST(tu.dari AS CHAR), ' - ', CAST(tu.sampai AS CHAR), ')') AS nama,
+            tu.dari AS dari,
+            tu.sampai AS sampai,
+            COUNT(CASE WHEN ph.sex = 1 THEN 1 END) AS laki,
+            COUNT(CASE WHEN ph.sex = 2 THEN 1 END) AS perempuan,
+            COUNT(*) AS total,
+            ROUND((COUNT(CASE WHEN ph.sex = 1 THEN 1 END) / tp.total_penduduk) * 100, 2) AS persen_laki_laki,
+            ROUND((COUNT(CASE WHEN ph.sex = 2 THEN 1 END) / tp.total_penduduk) * 100, 2) AS persen_perempuan,
+            ROUND((COUNT(*) / tp.total_penduduk) * 100, 2) AS persen_total_dalam_rentang,
+            tu.status
+        FROM
+            penduduk_hidup ph
+        JOIN
+            tweb_penduduk_umur tu ON ph.config_id = tu.config_id
+        JOIN
+            TotalPenduduk tp ON ph.config_id = tp.config_id
+        WHERE
+            ph.config_id = " . $this->configId . "
+            AND tu.status = 0
+            AND akta_lahir <> ''
+            AND TIMESTAMPDIFF(YEAR, ph.tanggallahir, CURDATE()) BETWEEN tu.dari AND tu.sampai
+        GROUP BY
+            ph.config_id, tu.nama, tu.dari, tu.sampai, tp.total_penduduk
+    )
+    SELECT
+        dp.config_id,
+        dp.nama,
+        dp.dari,
+        dp.sampai,
+        SUM(dp.laki) AS laki,
+        SUM(dp.perempuan) AS perempuan,
+        SUM(dp.total) AS total,
+        ROUND(AVG(dp.persen_laki_laki), 2) AS persen_laki_laki,
+        ROUND(AVG(dp.persen_perempuan), 2) AS persen_perempuan,
+        ROUND(AVG(dp.persen_total_dalam_rentang), 2) AS persen_total_dalam_rentang,
+        ROUND(SUM(dp.laki) / SUM(tp.total_penduduk) * 100, 2) AS total_keseluruhan_persen_laki_laki,
+        ROUND(SUM(dp.perempuan) / SUM(tp.total_penduduk) * 100, 2) AS total_keseluruhan_persen_perempuan,
+        ROUND(SUM(dp.total) / SUM(tp.total_penduduk) * 100, 2) AS total_persen_dalam_rentang,
+        SUM(tp.total_penduduk) AS total_keseluruhan_penduduk
+    FROM
+        DetailPenduduk dp
+    JOIN
+        TotalPenduduk tp ON dp.config_id = tp.config_id
+    GROUP BY
+        dp.config_id, dp.nama, dp.dari, dp.sampai
+    ORDER BY
+        dp.config_id, dp.dari;
+");
+
+        $this->data =  $a;
+        // dd($this->data);
+        $this->dispatch('column', data: $this->data);
+    }
+
+    public function select_jml_penduduk_per_kategori0($judul)
+    {
+        $this->judul = $judul;
+        $a = DB::select("
+                    WITH TotalPenduduk AS (
+                    SELECT
+                        pendidikan_kk_id,
+                        COUNT(*) AS total,
+                        COUNT(CASE WHEN sex = 1 THEN id END) AS laki,
+                        COUNT(CASE WHEN sex = 2 THEN id END) AS perempuan
+                    FROM
+                        penduduk_hidup
+                    WHERE
+                        config_id = 110
+                    GROUP BY
+                        pendidikan_kk_id
+                ),
+                DetailPenduduk AS (
+                    SELECT
+                        u.id,
+                        u.nama,
+                        tp.total,
+                        tp.laki,
+                        tp.perempuan
+                    FROM
+                        tweb_penduduk_pendidikan_kk u
+                    LEFT JOIN
+                        TotalPenduduk tp ON u.id = tp.pendidikan_kk_id
+                )
+                SELECT
+                    dp.id,
+                    dp.nama,
+                    COALESCE(dp.total, 0) AS total,
+                    COALESCE(dp.laki, 0) AS laki,
+                    COALESCE(dp.perempuan, 0) AS perempuan
+                FROM
+                    DetailPenduduk dp
+                ORDER BY
+                    dp.id ASC,dp.nama;
+
+                ");
+        $this->data =  $a;
+        // dd($this->data);
+        $this->dispatch('column', data: $this->data);
+    }
     public function statistik($id)
     {
         $statistik_penduduk = [
@@ -415,17 +604,20 @@ class Statistik extends Component
 
         if (array_key_exists($id, $statistik_penduduk)) {
             if ($id == 14) {
-                $select = "u.*";
-                $where = "(DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai AND b.config_id = {$this->configId}";
-                $this->umur($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $select, $where);
+                $this->umur14($statistik_penduduk[$id]['judul']);
+                // $select = "u.*";
+                // $where = "(DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai AND b.config_id = {$this->configId}";
+                // $this->umur($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $select, $where);
             } else if ($id == 15) {
-                $select = "u.*, concat(u.nama, ' (', u.dari, ' - ', u.sampai, ')') as nama";
-                $where = "(DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai AND b.config_id = {$this->configId}";
-                $this->umur($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $select, $where);
+                $this->umur15($statistik_penduduk[$id]['judul']);
+                // $select = "u.*, concat(u.nama, ' (', u.dari, ' - ', u.sampai, ')') as nama";
+                // $where = "(DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai AND b.config_id = {$this->configId}";
+                // $this->umur($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $select, $where);
             } else if ($id == 16) {
-                $select = "u.*, concat('UMUR ', u.dari, ' S/D ', u.sampai, ' TAHUN') as nama";
-                $where = "(DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai AND akta_lahir <> '' AND b.config_id = {$this->configId}";
-                $this->umur($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $select, $where);
+                // $select = "u.*, concat('UMUR ', u.dari, ' S/D ', u.sampai, ' TAHUN') as nama";
+                // $where = "(DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) >= u.dari AND (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0) <= u.sampai AND akta_lahir <> '' AND b.config_id = {$this->configId}";
+                // $this->umur($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $select, $where);
+                $this->umur16($statistik_penduduk[$id]['judul']);
             } else if ($id == 17) {
                 $select = "u.*";
                 $where = "((DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0)>=17 OR (status_kawin IS NOT NULL AND status_kawin <> 1)) AND u.status_rekam = status_rekam AND b.config_id = {$this->configId}";
@@ -447,7 +639,8 @@ class Statistik extends Component
                 $where = "u.sasaran = '2' AND (u.config_id = {$this->configId} OR u.config_id IS NULL)";
                 $this->bantuan($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $where);
             } else {
-                $this->select_jml_penduduk_per_kategori($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul']);
+                $this->select_jml_penduduk_per_kategori0($statistik_penduduk[$id]['judul']);
+                // $this->select_jml_penduduk_per_kategori($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul']);
             }
         } else {
             $this->kelasSosial();
