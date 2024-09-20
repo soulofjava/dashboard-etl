@@ -85,48 +85,7 @@ class Statistik extends Component
     }
 
 
-    public function ktp($tabel_referensi, $judul, $select, $where)
-    {
-        $this->judul = $judul;
-        $this->data = DB::select("
-        SELECT
-            $select,
-            (SELECT COUNT(b.id)
-             FROM penduduk_hidup b
-             LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
-             WHERE $where) as total,
-            (SELECT COUNT(b.id)
-             FROM penduduk_hidup b
-             LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
-             WHERE $where
-             AND b.sex = '1') as laki,
-            (SELECT COUNT(b.id)
-             FROM penduduk_hidup b
-             LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
-             WHERE $where
-             AND b.sex = '2') as perempuan
-        FROM
-            $tabel_referensi u
-        GROUP BY u.id;
-    ");
 
-        $datastring = json_decode(json_encode($this->data), true);
-
-        foreach ($datastring as $row) {
-            $this->jumlah += $row['total'];
-            $this->totallaki += $row['laki'];
-            $this->totalperem += $row['perempuan'];
-        }
-
-        foreach ($this->data_jml_penduduk_hidup() as $data) {
-            $this->menghitungBarisTotal($data);
-        }
-        foreach ($this->data_jml_penduduk_hidup() as $data) {
-            $this->menghitungBarisBelum($data);
-        }
-
-        $this->dispatch('column', data: $this->data);
-    }
     public function covid($tabel_referensi, $judul)
     {
         $this->judul = $judul;
@@ -530,42 +489,153 @@ class Statistik extends Component
     {
         $this->judul = $judul;
         $a = DB::select("
-                    WITH TotalPenduduk AS (
-                    SELECT
-                        pendidikan_kk_id,
-                        COUNT(*) AS total,
-                        COUNT(CASE WHEN sex = 1 THEN id END) AS laki,
-                        COUNT(CASE WHEN sex = 2 THEN id END) AS perempuan
-                    FROM
-                        penduduk_hidup
-                    WHERE
-                        config_id = 110
-                    GROUP BY
-                        pendidikan_kk_id
-                ),
-                DetailPenduduk AS (
-                    SELECT
-                        u.id,
-                        u.nama,
-                        tp.total,
-                        tp.laki,
-                        tp.perempuan
-                    FROM
-                        tweb_penduduk_pendidikan_kk u
-                    LEFT JOIN
-                        TotalPenduduk tp ON u.id = tp.pendidikan_kk_id
-                )
-                SELECT
-                    dp.id,
-                    dp.nama,
-                    COALESCE(dp.total, 0) AS total,
-                    COALESCE(dp.laki, 0) AS laki,
-                    COALESCE(dp.perempuan, 0) AS perempuan
-                FROM
-                    DetailPenduduk dp
-                ORDER BY
-                    dp.id ASC,dp.nama;
+                        WITH TotalPenduduk AS (
+            SELECT
+                pendidikan_kk_id,
+                COUNT(*) AS total,
+                COUNT(CASE WHEN sex = 1 THEN id END) AS laki,
+                COUNT(CASE WHEN sex = 2 THEN id END) AS perempuan
+            FROM
+                penduduk_hidup
+            WHERE
+                config_id = 110
+            GROUP BY
+                pendidikan_kk_id
+        ),
+        GrandTotal AS (
+            SELECT SUM(total) AS grand_total FROM TotalPenduduk
+        ),
+        DetailPenduduk AS (
+            SELECT
+                u.id,
+                u.nama,
+                COALESCE(tp.total, 0) AS total,
+                COALESCE(tp.laki, 0) AS laki,
+                COALESCE(tp.perempuan, 0) AS perempuan
+            FROM
+                tweb_penduduk_pendidikan_kk u
+            LEFT JOIN
+                TotalPenduduk tp ON u.id = tp.pendidikan_kk_id
+        )
+        SELECT
+            dp.id,
+            dp.nama,
+            dp.total,
+            dp.laki,
+            dp.perempuan,
+            ROUND((dp.total / NULLIF(gt.grand_total, 0)) * 100, 2) AS persen_total_dalam_rentang,
+            CASE 
+                WHEN dp.total > 0 THEN ROUND((dp.laki / dp.total) * 100, 2)
+                ELSE 0
+            END AS persen_laki_laki,
+            CASE 
+                WHEN dp.total > 0 THEN ROUND((dp.perempuan / dp.total) * 100, 2)
+                ELSE 0
+            END AS persen_perempuan
+        FROM
+            DetailPenduduk dp
+            CROSS JOIN GrandTotal gt
+        ORDER BY
+            dp.id ASC,
+            dp.nama;
+                ");
+        $this->data =  $a;
+        // dd($this->data);
+        $this->dispatch('column', data: $this->data);
+    }
+    public function ktp($tabel_referensi, $judul, $select, $where)
+    {
+        $this->judul = $judul;
+        $this->data = DB::select("
+        SELECT
+            $select,
+            (SELECT COUNT(b.id)
+             FROM penduduk_hidup b
+             LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
+             WHERE $where) as total,
+            (SELECT COUNT(b.id)
+             FROM penduduk_hidup b
+             LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
+             WHERE $where
+             AND b.sex = '1') as laki,
+            (SELECT COUNT(b.id)
+             FROM penduduk_hidup b
+             LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
+             WHERE $where
+             AND b.sex = '2') as perempuan
+        FROM
+            $tabel_referensi u
+        GROUP BY u.id;
+    ");
 
+        $datastring = json_decode(json_encode($this->data), true);
+
+        foreach ($datastring as $row) {
+            $this->jumlah += $row['total'];
+            $this->totallaki += $row['laki'];
+            $this->totalperem += $row['perempuan'];
+        }
+
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisTotal($data);
+        }
+        foreach ($this->data_jml_penduduk_hidup() as $data) {
+            $this->menghitungBarisBelum($data);
+        }
+
+        $this->dispatch('column', data: $this->data);
+    }
+    public function ktpCopy($judul)
+    {
+        $this->judul = $judul;
+        $a = DB::select("
+                    WITH cte_penduduk AS (
+                SELECT
+                    b.id,
+                    b.status_rekam,
+                    b.sex
+                FROM
+                    penduduk_hidup b
+                    LEFT JOIN tweb_wil_clusterdesa a ON b.id_cluster = a.id
+                WHERE
+                    b.config_id = 110
+                    AND (
+                        TIMESTAMPDIFF(YEAR, b.tanggallahir, CURDATE()) >= 17
+                        OR (b.status_kawin IS NOT NULL AND b.status_kawin <> 1)
+                    )
+            ),
+            cte_counts AS (
+                SELECT
+                    status_rekam,
+                    COUNT(id) AS total,
+                    SUM(CASE WHEN sex = '1' THEN 1 ELSE 0 END) AS laki,
+                    SUM(CASE WHEN sex = '2' THEN 1 ELSE 0 END) AS perempuan
+                FROM
+                    cte_penduduk
+                GROUP BY
+                    status_rekam
+            ),
+            cte_grand_total AS (
+                SELECT SUM(total) AS grand_total FROM cte_counts
+            )
+            SELECT
+                u.*,
+                COALESCE(c.total, 0) AS total,
+                COALESCE(c.laki, 0) AS laki,
+                COALESCE(c.perempuan, 0) AS perempuan,
+                ROUND((COALESCE(c.total, 0) / NULLIF(gt.grand_total, 0)) * 100, 2) AS persen_total_dalam_rentang,
+                CASE 
+                    WHEN COALESCE(c.total, 0) > 0 THEN ROUND((c.laki / c.total) * 100, 2)
+                    ELSE 0
+                END AS persen_laki_laki,
+                CASE 
+                    WHEN COALESCE(c.total, 0) > 0 THEN ROUND((c.perempuan / c.total) * 100, 2)
+                    ELSE 0
+                END AS persen_perempuan
+            FROM
+                tweb_status_ktp u
+                LEFT JOIN cte_counts c ON u.status_rekam = c.status_rekam
+                CROSS JOIN cte_grand_total gt;
                 ");
         $this->data =  $a;
         // dd($this->data);
@@ -619,9 +689,10 @@ class Statistik extends Component
                 // $this->umur($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $select, $where);
                 $this->umur16($statistik_penduduk[$id]['judul']);
             } else if ($id == 17) {
-                $select = "u.*";
-                $where = "((DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0)>=17 OR (status_kawin IS NOT NULL AND status_kawin <> 1)) AND u.status_rekam = status_rekam AND b.config_id = {$this->configId}";
-                $this->ktp($statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $select, $where);
+                $this->ktpCopy($statistik_penduduk[$id]['judul']);
+                // $select = "u.*";
+                // $where = "((DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW()) - TO_DAYS(tanggallahir)), '%Y')+0)>=17 OR (status_kawin IS NOT NULL AND status_kawin <> 1)) AND u.status_rekam = status_rekam AND b.config_id = {$this->configId}";
+                // $this->ktp($statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $select, $where);
             } else if ($id == 18) {
                 $this->covid($statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul']);
             } else if ($id == 19) {
