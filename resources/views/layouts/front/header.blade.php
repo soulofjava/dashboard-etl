@@ -3,15 +3,16 @@
         <div class="container py-2 d-md-flex flex-md-row">
             <div class="d-flex flex-row align-items-center">
                 <div class="icon text-white fs-22 mt-1 me-2"> <i class="uil uil-location-pin-alt"></i></div>
-                <address class="mb-0">Moonshine St. 14/05 Light City</address>
+                <address class="mb-0">Jalan Sabuk Alu No. 2A, Wonosobo Timur, Wonosobo</address>
             </div>
             <div class="d-flex flex-row align-items-center me-6 ms-auto">
                 <div class="icon text-white fs-22 mt-1 me-2"> <i class="uil uil-phone-volume"></i></div>
-                <p class="mb-0">00 (123) 456 78 90</p>
+                <p class="mb-0">(0286) 325112</p>
             </div>
             <div class="d-flex flex-row align-items-center">
                 <div class="icon text-white fs-22 mt-1 me-2"> <i class="uil uil-message"></i></div>
-                <p class="mb-0"><a href="mailto:sandbox@email.com" class="link-white hover">sandbox@email.com</a></p>
+                <p class="mb-0"><a href="mailto:sandbox@email.com"
+                        class="link-white hover">diskominfo@wonosobokab.go.id</a></p>
             </div>
         </div>
         <!-- /.container -->
@@ -19,9 +20,8 @@
     <nav class="navbar navbar-expand-lg center-nav transparent navbar-light">
         <div class="container flex-lg-row flex-nowrap align-items-center">
             <div class="navbar-brand w-100">
-                <a href="./index.html">
-                    <img src="{{ asset('costum/etl.png') }}" srcset="{{ asset('costum/etl.png') }}"
-                        alt="" />
+                <a href="{{ route('home') }}">
+                    <img src="{{ asset('costum/etl.png') }}" srcset="{{ asset('costum/etl.png') }}" alt="" />
                 </a>
             </div>
             <div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start">
@@ -31,9 +31,9 @@
                         aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body ms-lg-auto d-flex flex-column h-100">
-                    <ul class="navbar-nav">
+                    {{-- <ul class="navbar-nav">
                         <li class="nav-item dropdown dropdown-mega">
-                            <a class="nav-link" href="#" data-bs-toggle="dropdown">Home</a>
+                            <a class="nav-link" href=" {{ route('/') }}" data-bs-toggle="dropdown">Home</a>
 
                             <!--/.dropdown-menu -->
                         </li>
@@ -455,7 +455,7 @@
                             </ul>
                             <!--/.dropdown-menu -->
                         </li>
-                    </ul>
+                    </ul> --}}
                     <!-- /.navbar-nav -->
                     <div class="offcanvas-footer d-lg-none">
                         <div>
