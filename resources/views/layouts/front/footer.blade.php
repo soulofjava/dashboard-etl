@@ -1,7 +1,7 @@
 <footer class="bg-light">
     <div class="container py-13 py-md-15">
         <div class="row gy-6 gy-lg-0">
-            <div class="col-md-4 col-lg-3">
+            {{-- <div class="col-md-4 col-lg-3">
                 <div class="widget">
                     <img class="mb-4" src="{{ asset('sandbox/assets/img/logo-dark.png') }}"
                         srcset="{{ asset('sandbox/assets/img/logo-dark@2x.png 2x') }}" alt="" />
@@ -80,7 +80,7 @@
                     <!-- /.newsletter-wrapper -->
                 </div>
                 <!-- /.widget -->
-            </div>
+            </div> --}}
             <!-- /column -->
         </div>
         <!--/.row -->

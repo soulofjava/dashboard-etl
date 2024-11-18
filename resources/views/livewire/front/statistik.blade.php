@@ -150,13 +150,13 @@
                                             <th scope="row">{{ $no++ }}</th>
                                             <td>{{ $row->nama }}</td>
                                             <td>{{ $row->total }}</td>
-                                            <td>{{ $row->persen_total_dalam_rentang??""}}%
+                                            <td>{{ $row->persen_total_dalam_rentang ?? '' }}%
                                             </td>
                                             <td>{{ $row->laki ?? '' }} </td>
-                                            <td>{{$row->persen_laki_laki??"" }}%
+                                            <td>{{ $row->persen_laki_laki ?? '' }}%
                                             </td>
                                             <td>{{ $row->perempuan ?? '' }}</td>
-                                            <td>{{$row->persen_perempuan??"" }}%
+                                            <td>{{ $row->persen_perempuan ?? '' }}%
                                             </td>
                                         </tr>
                                         {{-- @php
@@ -174,8 +174,8 @@
                                             );
                                         @endphp --}}
                                     @endforeach
-                                    @if($data)
-                                    {{-- <tr>
+                                    @if ($data)
+                                        {{-- <tr>
                                         <td colspan="2" class="font-weight-bold">Jumlah</td>
                                         <td class="text-right"> {{ $row->total_keseluruhan_penduduk }}</td>
                                         <td class="text-right">{{100 }} %</td>
@@ -239,7 +239,7 @@
                                                     class="link-body">Pendidikan
                                                     Dalam KK</span></li>
                                             {{-- done --}}
-                                            <li><span style="cursor:pointer" wire:click="statistik(14)"
+                                            <li><span style="cursor:pointer" wire:click="statistik(10)"
                                                     class="link-body">Pendidikan Sedang
                                                     Ditempuh</span></li>
                                             {{-- done --}}

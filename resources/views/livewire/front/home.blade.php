@@ -33,7 +33,7 @@
                                 class="rounded svg-inject icon-svg icon-svg-sm solid-mono text-fuchsia mb-3"
                                 alt="" />
                             <h4>Penduduk</h4>
-                            <p class="mb-2">{{ $totalPenduduk }}</p>
+                            <h5 class="mb-2">{{ $totalPenduduk ?? '-' }}</h5>
                         </div>
                         <!--/.card-body -->
                     </div>
@@ -46,7 +46,7 @@
                             <img src="{{ asset('costum/img/keluarga.jpg') }}"
                                 class="svg-inject icon-svg icon-svg-sm solid-mono text-violet mb-3" alt="" />
                             <h4>Kecamatan</h4>
-                            <p class="mb-2">{{ $totalKecamatan }}</p>
+                            <h5 class="mb-2">{{ $totalKecamatan }}</h5>
                         </div>
                         <!--/.card-body -->
                     </div>
@@ -59,7 +59,7 @@
                             <img src="{{ asset('costum/img/rtm.jpg') }}"
                                 class="svg-inject icon-svg icon-svg-sm solid-mono text-violet mb-3" alt="" />
                             <h4>Desa / Kelurahan</h4>
-                            <p class="mb-2">{{ $totalDesa }}</p>
+                            <h5 class="mb-2">{{ $totalDesa }}</h5>
                         </div>
                         <!--/.card-body -->
                     </div>
@@ -72,7 +72,7 @@
                             <img src="{{ asset('costum/img/bantuan.jpg') }}"
                                 class="svg-inject icon-svg icon-svg-sm solid-mono text-violet mb-3" alt="" />
                             <h4>Bantuan</h4>
-                            <p class="mb-2">{{ $totalBantuan }}</p>
+                            <h5 class="mb-2">{{ $totalBantuan }}</h5>
                         </div>
                         <!--/.card-body -->
                     </div>
