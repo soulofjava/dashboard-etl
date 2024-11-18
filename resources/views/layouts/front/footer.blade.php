@@ -1,18 +1,19 @@
 <footer class="bg-light">
     <div class="container py-13 py-md-15">
         <div class="row gy-6 gy-lg-0">
-            {{-- <div class="col-md-4 col-lg-3">
+            <div class="col-md-4 col-lg-3">
                 <div class="widget">
-                    <img class="mb-4" src="{{ asset('sandbox/assets/img/logo-dark.png') }}"
-                        srcset="{{ asset('sandbox/assets/img/logo-dark@2x.png 2x') }}" alt="" />
-                    <p class="mb-4">© 2023 Sandbox. <br class="d-none d-lg-block" />All rights reserved.</p>
-                    <nav class="nav social ">
+                    <img class="mb-4" src="{{ asset('costum/etl.png') }}" srcset="{{ asset('costum/etl.png') }}"
+                        alt="" />
+                    <p class="mb-4">© 2024 Diskominfo Kab. Wonosobo <br class="d-none d-lg-block" />All rights
+                        reserved.</p>
+                    {{-- <nav class="nav social ">
                         <a href="#"><i class="uil uil-twitter"></i></a>
                         <a href="#"><i class="uil uil-facebook-f"></i></a>
                         <a href="#"><i class="uil uil-dribbble"></i></a>
                         <a href="#"><i class="uil uil-instagram"></i></a>
                         <a href="#"><i class="uil uil-youtube"></i></a>
-                    </nav>
+                    </nav> --}}
                     <!-- /.social -->
                 </div>
                 <!-- /.widget -->
@@ -20,23 +21,23 @@
             <!-- /column -->
             <div class="col-md-4 col-lg-3">
                 <div class="widget">
-                    <h4 class="widget-title  mb-3">Get in Touch</h4>
-                    <address class="pe-xl-15 pe-xxl-17">Moonshine St. 14/05 Light City, London, United Kingdom
+                    <h4 class="widget-title  mb-3">Alamat</h4>
+                    <address class="pe-xl-15 pe-xxl-17">Jalan Sabuk Alu No. 2A, Wonosobo Timur, Wonosobo
                     </address>
-                    <a href="mailto:#" class="link-body">info@email.com</a><br /> 00 (123) 456 78 90
+                    <a href="mailto:#" class="link-body">diskominfo@wonosobokab.go.id</a><br /> (0286) 325112
                 </div>
                 <!-- /.widget -->
             </div>
             <!-- /column -->
             <div class="col-md-4 col-lg-3">
                 <div class="widget">
-                    <h4 class="widget-title  mb-3">Learn More</h4>
+                    <h4 class="widget-title  mb-3">Link Terkait</h4>
                     <ul class="list-unstyled text-reset mb-0">
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Our Story</a></li>
-                        <li><a href="#">Projects</a></li>
-                        <li><a href="#">Terms of Use</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="https://website.wonosobokab.go.id/" target="_blank">Website Pemkab Wonosobo</a>
+                        </li>
+                        <li><a href="https://smartcity.wonosobokab.go.id/" target="_blank">Dashboard Smartcity</a></li>
+                        <li><a href="https://satudata.wonosobokab.go.id/" target="_blank">Satu Data Wonosobo</a></li>
+                        <li><a href="https://ayopromo.com/" target="_blank">UMKM Wonosobo</a></li>
                     </ul>
                 </div>
                 <!-- /.widget -->
@@ -55,11 +56,12 @@
                                 class="validate " target="_blank" novalidate>
                                 <div id="mc_embed_signup_scroll2">
                                     <div class="mc-field-group input-group form-floating">
-                                        <input type="email" value="" name="EMAIL" class="required email form-control"
-                                            placeholder="Email Address" id="mce-EMAIL2">
+                                        <input type="email" value="" name="EMAIL"
+                                            class="required email form-control" placeholder="Email Address"
+                                            id="mce-EMAIL2">
                                         <label for="mce-EMAIL2">Email Address</label>
-                                        <input type="submit" value="Join" name="subscribe" id="mc-embedded-subscribe2"
-                                            class="btn btn-primary ">
+                                        <input type="submit" value="Join" name="subscribe"
+                                            id="mc-embedded-subscribe2" class="btn btn-primary ">
                                     </div>
                                     <div id="mce-responses2" class="clear">
                                         <div class="response" id="mce-error-response2" style="display:none">
@@ -80,7 +82,7 @@
                     <!-- /.newsletter-wrapper -->
                 </div>
                 <!-- /.widget -->
-            </div> --}}
+            </div>
             <!-- /column -->
         </div>
         <!--/.row -->

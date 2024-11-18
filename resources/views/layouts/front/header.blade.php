@@ -1,5 +1,5 @@
 <header class="wrapper bg-light">
-    <div class="bg-primary text-white fw-bold fs-15 mb-2">
+    {{-- <div class="bg-primary text-white fw-bold fs-15 mb-2">
         <div class="container py-2 d-md-flex flex-md-row">
             <div class="d-flex flex-row align-items-center">
                 <div class="icon text-white fs-22 mt-1 me-2"> <i class="uil uil-location-pin-alt"></i></div>
@@ -16,7 +16,7 @@
             </div>
         </div>
         <!-- /.container -->
-    </div>
+    </div> --}}
     <nav class="navbar navbar-expand-lg center-nav transparent navbar-light">
         <div class="container flex-lg-row flex-nowrap align-items-center">
             <div class="navbar-brand w-100">
