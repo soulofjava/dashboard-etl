@@ -14,10 +14,10 @@
             <!--/column -->
             <div class="col-lg-5 mt-lg-n10 text-center text-lg-start" data-cues="slideInDown" data-group="page-title"
                 data-delay="600">
-                <h1 class="display-1 mb-5">We bring solutions to make life easier.</h1>
+                <h1 class="display-1 mb-5">Kami menghadirkan solusi untuk membuat hidup lebih mudah.</h1>
                 <p class="lead fs-25 lh-sm mb-7 px-md-10 px-lg-0">
-                    We have considered our solutions to support all stages of Wonosobo Regency Growth.</p>
-
+                    Dashboard data desa menampilkan data dari seluruh desa dan kelurahan kabupaten Wonosobo tentang
+                    Sosial Ekonomi, Kependudukan, Pemerintahan, Keuangan dan lain-lain secara realtime.</p>
             </div>
             <!--/column -->
         </div>
