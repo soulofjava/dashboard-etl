@@ -4,7 +4,6 @@
             <div class="col-md-4 col-lg-3">
                 <div class="widget">
                     <img class="mb-4" src="{{ asset('assets/images/logo_datadesa.png') }}" srcset="{{ asset('assets/images/logo_datadesa.png') }}" alt=""  height="50"/>
-                        alt="" />
                     <p class="mb-4">© 2024 Diskominfo Kab. Wonosobo <br class="d-none d-lg-block" />All rights
                         reserved.</p>
                     {{-- <nav class="nav social ">
