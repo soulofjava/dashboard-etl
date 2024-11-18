@@ -13,7 +13,7 @@
                         <article class="item post col-md-4">
                             <div class="card">
                                 <figure class="card-img-top overlay overlay-1 hover-scale"><a href="#"> <img
-                                            src="{{ asset('costum/img') }}./kelurahan-1.jpg"
+                                            src="{{ asset('costum/img') }}/kelurahan-1.jpg"
                                             style="object-fit:cover; object-position: right; width:200px; height:300px;"
                                             alt="" /></a>
                                     <figcaption>
