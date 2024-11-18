@@ -32,7 +32,7 @@ class Statistik extends Component
 
     public function updateDesa()
     {
-        $this->listDesa = Config::where('kode_kecamatan', $this->selectKecamatan)->get();
+        $this->listDesa = Config::where('kode_kecamatan', $this->selectKecamatan)->orderBy('nama_desa', 'ASC')->get();
         $this->selectDesa = "";
     }
 
@@ -524,11 +524,11 @@ class Statistik extends Component
             dp.laki,
             dp.perempuan,
             ROUND((dp.total / NULLIF(gt.grand_total, 0)) * 100, 2) AS persen_total_dalam_rentang,
-            CASE 
+            CASE
                 WHEN dp.total > 0 THEN ROUND((dp.laki / dp.total) * 100, 2)
                 ELSE 0
             END AS persen_laki_laki,
-            CASE 
+            CASE
                 WHEN dp.total > 0 THEN ROUND((dp.perempuan / dp.total) * 100, 2)
                 ELSE 0
             END AS persen_perempuan
@@ -624,11 +624,11 @@ class Statistik extends Component
                 COALESCE(c.laki, 0) AS laki,
                 COALESCE(c.perempuan, 0) AS perempuan,
                 ROUND((COALESCE(c.total, 0) / NULLIF(gt.grand_total, 0)) * 100, 2) AS persen_total_dalam_rentang,
-                CASE 
+                CASE
                     WHEN COALESCE(c.total, 0) > 0 THEN ROUND((c.laki / c.total) * 100, 2)
                     ELSE 0
                 END AS persen_laki_laki,
-                CASE 
+                CASE
                     WHEN COALESCE(c.total, 0) > 0 THEN ROUND((c.perempuan / c.total) * 100, 2)
                     ELSE 0
                 END AS persen_perempuan

@@ -21,7 +21,7 @@
         <div class="container flex-lg-row flex-nowrap align-items-center">
             <div class="navbar-brand w-100">
                 <a href="{{ route('home') }}">
-                    <img src="{{ asset('costum/etl.png') }}" srcset="{{ asset('costum/etl.png') }}" alt="" />
+                    <img src="{{ asset('assets/images/logo_datadesa.png') }}" srcset="{{ asset('assets/images/logo_datadesa.png') }}" alt=""  height="50"/>
                 </a>
             </div>
             <div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start">

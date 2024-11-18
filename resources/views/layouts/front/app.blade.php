@@ -3,7 +3,7 @@
 
 <head>
     @include('layouts.front.meta')
-    <title>Dashboard ETL</title>
+    <title>Dari Desa untuk Wonosobo Satu Data</title>
     @include('layouts.front.style')
     @stack('css')
     @vite(['resources/js/app.js'])
