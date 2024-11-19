@@ -718,7 +718,7 @@ class Statistik extends Component
             "
         );
         $this->data =  $a;
-        dd($this->data);
+        // dd($this->data);
         $this->dispatch('column', data: $this->data);
     }
     public function bantuan($id_referensi, $tabel_referensi, $judul, $where)
