@@ -485,64 +485,7 @@ class Statistik extends Component
         $this->dispatch('column', data: $this->data);
     }
 
-    public function select_jml_penduduk_per_kategori0($judul)
-    {
-        $this->judul = $judul;
-        $a = DB::select("
-                        WITH TotalPenduduk AS (
-            SELECT
-                pendidikan_kk_id,
-                COUNT(*) AS total,
-                COUNT(CASE WHEN sex = 1 THEN id END) AS laki,
-                COUNT(CASE WHEN sex = 2 THEN id END) AS perempuan
-            FROM
-                penduduk_hidup
-            WHERE
-                config_id = 110
-            GROUP BY
-                pendidikan_kk_id
-        ),
-        GrandTotal AS (
-            SELECT SUM(total) AS grand_total FROM TotalPenduduk
-        ),
-        DetailPenduduk AS (
-            SELECT
-                u.id,
-                u.nama,
-                COALESCE(tp.total, 0) AS total,
-                COALESCE(tp.laki, 0) AS laki,
-                COALESCE(tp.perempuan, 0) AS perempuan
-            FROM
-                tweb_penduduk_pendidikan_kk u
-            LEFT JOIN
-                TotalPenduduk tp ON u.id = tp.pendidikan_kk_id
-        )
-        SELECT
-            dp.id,
-            dp.nama,
-            dp.total,
-            dp.laki,
-            dp.perempuan,
-            ROUND((dp.total / NULLIF(gt.grand_total, 0)) * 100, 2) AS persen_total_dalam_rentang,
-            CASE
-                WHEN dp.total > 0 THEN ROUND((dp.laki / dp.total) * 100, 2)
-                ELSE 0
-            END AS persen_laki_laki,
-            CASE
-                WHEN dp.total > 0 THEN ROUND((dp.perempuan / dp.total) * 100, 2)
-                ELSE 0
-            END AS persen_perempuan
-        FROM
-            DetailPenduduk dp
-            CROSS JOIN GrandTotal gt
-        ORDER BY
-            dp.id ASC,
-            dp.nama;
-                ");
-        $this->data =  $a;
-        // dd($this->data);
-        $this->dispatch('column', data: $this->data);
-    }
+
     public function ktp($tabel_referensi, $judul, $select, $where)
     {
         $this->judul = $judul;
@@ -709,15 +652,75 @@ class Statistik extends Component
             } else if ($id == 23) {
                 $where = "u.sasaran = '2' AND (u.config_id = {$this->configId} OR u.config_id IS NULL)";
                 $this->bantuan($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul'], $where);
-            } else {
-                $this->select_jml_penduduk_per_kategori0($statistik_penduduk[$id]['judul']);
+            }
+            //  elseif ($id == 0) {
+            //     $this->pendidikan_dalam_kk($statistik_penduduk[$id]['judul']);
+            // }
+            else {
+                // $this->select_jml_penduduk_per_kategori0($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul']);
+                $this->pendidikan_dalam_kk($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul']);
                 // $this->select_jml_penduduk_per_kategori($statistik_penduduk[$id]['id_referensi'], $statistik_penduduk[$id]['tabel_referensi'], $statistik_penduduk[$id]['judul']);
             }
         } else {
             $this->kelasSosial();
         }
     }
-
+    public function pendidikan_dalam_kk($id_referensi, $tabel_referensi, $judul)
+    {
+        $this->judul = $judul;
+        $a = DB::select(
+            "WITH TotalPenduduk AS (
+    SELECT
+                    p.$id_referensi,
+                    COUNT(p.id) AS total,
+                    COUNT(CASE WHEN p.sex = 1 THEN p.id END) AS laki,
+                    COUNT(CASE WHEN p.sex = 2 THEN p.id END) AS perempuan
+                FROM
+                    penduduk_hidup p
+                LEFT JOIN
+                    tweb_wil_clusterdesa a ON p.id_cluster = a.id
+                WHERE
+                    p.config_id = $this->configId
+                GROUP BY
+                    p.$id_referensi
+            ),
+            DetailPenduduk AS (
+                SELECT
+                    u.id,
+                    u.nama,
+                    COALESCE(tp.total, 0) AS total,
+                    COALESCE(tp.laki, 0) AS laki,
+                    COALESCE(tp.perempuan, 0) AS perempuan
+                FROM
+                    $tabel_referensi u
+                LEFT JOIN
+                    TotalPenduduk tp ON u.id = tp.$id_referensi
+            )
+            SELECT
+                dp.id,
+                dp.nama,
+                dp.total,
+                dp.laki,
+                dp.perempuan,
+                ROUND((dp.total / NULLIF(SUM(dp.total) OVER(), 0)) * 100, 2) AS persen_total_dalam_rentang,
+                CASE 
+                    WHEN dp.total > 0 THEN ROUND((dp.laki / dp.total) * 100, 2)
+                    ELSE 0
+                END AS persen_laki_laki,
+                CASE 
+                    WHEN dp.total > 0 THEN ROUND((dp.perempuan / dp.total) * 100, 2)
+                    ELSE 0
+                END AS persen_perempuan
+            FROM
+                DetailPenduduk dp
+            ORDER BY
+                dp.id ASC, dp.nama;
+            "
+        );
+        $this->data =  $a;
+        dd($this->data);
+        $this->dispatch('column', data: $this->data);
+    }
     public function bantuan($id_referensi, $tabel_referensi, $judul, $where)
     {
         $this->judul = $judul;
@@ -806,6 +809,63 @@ class Statistik extends Component
             $this->totallaki = $row['laki'];
             $this->totalperem = $row['perempuan'];
         }
+    }
+    public function select_jml_penduduk_per_kategori0($id_referensi, $tabel_referensi, $judul)
+    {
+        $this->judul = $judul;
+        $a = DB::select("
+                        WITH TotalPenduduk AS (
+            SELECT
+                $id_referensi,
+                COUNT(*) AS total,
+                COUNT(CASE WHEN sex = 1 THEN id END) AS laki,
+                COUNT(CASE WHEN sex = 2 THEN id END) AS perempuan
+            FROM
+                penduduk_hidup
+            WHERE
+                config_id = 110
+            GROUP BY
+                $id_referensi
+        ),
+        GrandTotal AS (
+            SELECT SUM(total) AS grand_total FROM TotalPenduduk
+        ),
+        DetailPenduduk AS (
+            SELECT
+                u.id,
+                u.nama,
+                COALESCE(tp.total, 0) AS total,
+                COALESCE(tp.laki, 0) AS laki,
+                COALESCE(tp.perempuan, 0) AS perempuan
+            FROM
+                $tabel_referensi u
+            LEFT JOIN
+                TotalPenduduk tp ON u.id = tp.$id_referensi
+        )
+        SELECT
+            dp.id,
+            dp.nama,
+            dp.total,
+            dp.laki,
+            dp.perempuan,
+            ROUND((dp.total / NULLIF(gt.grand_total, 0)) * 100, 2) AS persen_total_dalam_rentang,
+            CASE 
+                WHEN dp.total > 0 THEN ROUND((dp.laki / dp.total) * 100, 2)
+                ELSE 0
+            END AS persen_laki_laki,
+            CASE 
+                WHEN dp.total > 0 THEN ROUND((dp.perempuan / dp.total) * 100, 2)
+                ELSE 0
+            END AS persen_perempuan
+        FROM
+            DetailPenduduk dp
+            CROSS JOIN GrandTotal gt
+        ORDER BY
+            dp.id ASC,
+            dp.nama;
+                ");
+        $this->data =  $a;
+        $this->dispatch('column', data: $this->data);
     }
     public function select_jml_penduduk_per_kategori($id_referensi, $tabel_referensi, $judul)
     {
